@@ -1,12 +1,13 @@
 import React from "react";
+
+import Table from "../components/Table"
+
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +38,7 @@ export const Orders = () => {
         <Grid item xs={12}>
           <Typography>ΑΝΑΖΗΤΗΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item sm={12}>
           <FormControl component="fieldset">
             <RadioGroup
               aria-label="gender"
@@ -54,10 +55,10 @@ export const Orders = () => {
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid item lg={12} sm={3}>
-          table master
+        <Grid item lg={12} sm={12}>
+          <Table />
         </Grid>
-        <Grid item lg={12} sm={3}>
+        <Grid item lg={12} sm={12}>
           table detail
         </Grid>
       </Grid>

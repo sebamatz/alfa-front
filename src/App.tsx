@@ -10,10 +10,13 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <TopMenu />
+      {/* <TopMenu /> */}
       <Router>
         <Switch>
-          <Route exact path="/">
+        <Route exact path="/">
+            <Dashboard />
+          </Route>
+          <Route exact path="/erp-test">
             <Dashboard />
           </Route>
           <Route path="/orders">
