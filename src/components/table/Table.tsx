@@ -75,6 +75,7 @@ type TableProps = {
   onRowclick: (data: any) => void;
   rows: Data[];
   headCells: HeadCell[];
+  name: string;
 };
 
 export default function DataTable(props: TableProps) {
@@ -84,7 +85,7 @@ export default function DataTable(props: TableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { onRowclick, rows, headCells } = props;
+  const { onRowclick, rows, headCells,name } = props;
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -140,10 +141,10 @@ export default function DataTable(props: TableProps) {
                     hover
                     onClick={(event) => handleRowClick(event, row)}
                     tabIndex={-1}
-                    key={row.name}
+                    key={row.name+name}
                   >
-                    {Object.keys(row).map((r) => (
-                      <TableCell key={row.name}>
+                    {Object.keys(row).map((r,i) => (
+                      <TableCell key={i}>
                         {row[r]}
                       </TableCell>
                     ))}

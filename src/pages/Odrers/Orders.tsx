@@ -70,9 +70,9 @@ export const Orders = () => {
           {value !== PENDING && <DatePickers />}
         </Grid>
         <Grid item lg={12} sm={12}>
-          <DataTable onRowclick={getDetails} rows={data} headCells={headCells} />
+          <DataTable name='master' onRowclick={getDetails} rows={data} headCells={headCells} />
         </Grid>
-        <DataTable onRowclick={getDetails} rows={data1} headCells={headCells} />
+        <DataTable name='details' onRowclick={getDetails} rows={data1} headCells={headCells} />
 
       </Grid>
     </div>
