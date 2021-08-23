@@ -44,7 +44,7 @@ interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property
   ) => void;
   order: Order;
   orderBy: string;
@@ -55,7 +55,7 @@ interface EnhancedTableProps {
 export default function EnhancedTableHead(props: EnhancedTableProps) {
   const {headCells, classes, order, orderBy, onRequestSort } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 

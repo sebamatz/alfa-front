@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
+import CancelIcon from "@material-ui/icons/Cancel";
 import TableRow from "@material-ui/core/TableRow";
 
 import EnhancedTableHead from "./Head";
+import { NewRow } from "./NewRow";
 
 import { HeadCell, Data } from "../../types";
 
@@ -23,7 +25,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = "asc" | "desc";
 
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof Data>(
   order: Order,
   orderBy: Key
 ): (
@@ -56,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     table: {
       minWidth: 750,
+      border: "none",
     },
     visuallyHidden: {
       border: 0,
@@ -74,18 +77,36 @@ const useStyles = makeStyles((theme: Theme) =>
 type TableProps = {
   onRowclick: (data: any) => void;
   rows: Data[];
-  headCells: HeadCell[];
+  headCells: any;
   name: string;
+  clearCell?: boolean;
+  maxCols?: number;
+  add?: boolean;
+  orderCol?: any
 };
 
 export default function DataTable(props: TableProps) {
+  const {
+    onRowclick,
+    rows,
+    headCells,
+    name,
+    clearCell = false,
+    maxCols = 100,
+    add = false,
+    orderCol=""
+
+  } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
+  const [orderBy, setOrderBy] = React.useState<keyof Data>(orderCol);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { onRowclick, rows, headCells,name } = props;
+
+
+  const [tableRows, setRow] = useState(rows);
+  const [addRow, setAddwRow] = useState(false);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -95,6 +116,24 @@ export default function DataTable(props: TableProps) {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const handleAddRowClick = (event: React.MouseEvent<unknown>) => {
+    event.preventDefault();
+    setAddwRow(!addRow);
+  };
+
+  const handleSaveOrder=(order:any) =>{
+    tableRows.push(order)
+    setRow(tableRows)
+    setAddwRow(false);
+
+  }
+  const handleRemoveOrder=(index:any) =>{
+    const newtableRows= tableRows.filter((data,i)=>index!==i)
+    setRow(newtableRows)
+    setAddwRow(false);
+
+  }
+
 
   const handleRowClick = (event: React.MouseEvent<unknown>, rowData: Data) => {
     event.preventDefault();
@@ -112,62 +151,83 @@ export default function DataTable(props: TableProps) {
     setPage(0);
   };
 
+  useEffect(() => {
+    setRow(rows);
+  }, [rows]);
+
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
-      <TableContainer>
-        <Table
-          className={classes.table}
-          aria-labelledby="tableTitle"
-          size={"medium"}
-          aria-label="enhanced table"
-        >
-          <EnhancedTableHead
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={rows.length}
-            headCells={headCells}
-          />
-          <TableBody>
-            {stableSort(rows, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row: any, index) => {
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleRowClick(event, row)}
-                    tabIndex={-1}
-                    key={row.name+name}
-                  >
-                    {Object.keys(row).map((r,i) => (
-                      <TableCell key={i}>
-                        {row[r]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <form>
+        <TableContainer>
+          {add && (
+            <button onClick={handleAddRowClick}>
+              {addRow ? "CANCEL" : "ADD"}
+            </button>
+          )}
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={"medium"}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              classes={classes}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+              headCells={headCells}
+            />
+            <TableBody>
+              {stableSort(tableRows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row: Data, index) => {
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleRowClick(event, row)}
+                      tabIndex={-1}
+                      key={index}
+                    >
+                      {Object.keys(row).map(
+                        (r: string, i: number) =>
+                          i < maxCols &&
+                          headCells.some((e: any) => e.id === r) && (
+                            <TableCell key={i}>
+                              {row[r as keyof typeof row]}
+                            </TableCell>
+                          )
+                      )}
+                      {clearCell && (
+                        <TableCell key={`${index}-cancel`}>
+                          <CancelIcon color="error"  onClick={()=>handleRemoveOrder(index)} />
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })}
+              {addRow && <NewRow saveOrder={handleSaveOrder} />}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </form>
     </div>
   );
 }
