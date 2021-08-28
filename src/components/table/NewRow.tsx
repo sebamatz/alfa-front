@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { TableRow, Input, TableCell, IconButton } from "@material-ui/core";
 import { SaveRounded } from "@material-ui/icons";
 
+import Autocomplete from "../AutoComplete"
+
 interface Props {
     saveOrder:(values:any)=>void;
 }
@@ -37,13 +39,13 @@ export const NewRow = ({saveOrder}:Props) => {
         <Input name="fincode" value={fincode} onChange={handleChange} />
       </TableCell>
       <TableCell>
-        <Input name="sku" value={sku} onChange={handleChange} />
+        <Autocomplete />
       </TableCell>
       <TableCell>
         <Input name="mtrlname" value={mtrlname} onChange={handleChange} />
       </TableCell>
       <TableCell>
-        <Input name="qtY2" value={qtY2} onChange={handleChange} />
+        <Input type='number' name="qtY2" value={qtY2} onChange={handleChange} />
       </TableCell>
       <TableCell>
         <Input name="qtY1" value={qtY1} onChange={handleChange} />
