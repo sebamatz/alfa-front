@@ -5,3 +5,10 @@
 .App{
   padding:15px
 }
+
+
+
+#root *[class*="MuiInputBase-input"] {
+  all: inherit;
+  height: auto;
+}

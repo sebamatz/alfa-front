@@ -25,19 +25,33 @@ const theme = createTheme({
     },
   },
 });
-const data = {SearchValue: "ΓΑΛΑΚΤΙΔ",BOption: 0,DFrom: "12/31/2013",DTo: "12/31/2013",TakeRecs:0,Id:169252,LastId:0,AFM:"082830016"}
 
 
 function App() {
 
 
   const [orders,setOrders]=useState([])
+  const [afm,setAfm]=useState(null)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const data = {SearchValue: null, BOption: 2, DFrom: null, DTo: null, TakeRecs:null, Id:null, LastId:null, AFM:afm}
 
   useEffect(() => {
-    getData("https://80.245.167.105:19580/ErpAPI/getcv/obj?pars=",data).then(data => setOrders(data))
 
-}, []);
+    const afmValue:any = document.getElementById('userAfm')
+    console.log(afmValue)
+    if(afmValue.value){
+      setAfm(afmValue.value)
+    }
+}, [afm]);
 
+useEffect(() => {
+
+  if(afm){
+    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data).then(data => setOrders(data))
+  }
+
+}, [afm]);
 
   return (
     <ThemeProvider theme={theme}>
