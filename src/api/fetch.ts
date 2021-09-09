@@ -186,11 +186,11 @@ const groupBy = (keys:any) => (array:any) =>
   }, {});
 
 
-export async function getData(url = "", params: any = {}) {
+export async function getData(url = "", params: any = {},short=false) {
   const queryString = encodeURIComponent(JSON.stringify(params));
   const structUrl = url + queryString;
   const response = await fetch(structUrl);
   const data = await response.json(); // parses JSON response into native JavaScript objects
   const groupFincodeStatus = groupBy(['fincode', 'status']);
-  return groupFincodeStatus(data);
+  return short?groupFincodeStatus(data):data;
 }

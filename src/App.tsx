@@ -48,7 +48,7 @@ function App() {
 useEffect(() => {
 
   if(afm){
-    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data).then(data => setOrders(data))
+    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data,true).then(data => setOrders(data))
   }
 
 }, [afm]);

@@ -7,11 +7,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import CancelIcon from "@material-ui/icons/Cancel";
 import TableRow from "@material-ui/core/TableRow";
+import moment from "moment";
 
 import EnhancedTableHead from "./Head";
 import { NewRow } from "./NewRow";
 
 import { HeadCell, Data } from "../../types";
+import { AnyTxtRecord } from "dns";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -82,7 +84,7 @@ type TableProps = {
   clearCell?: boolean;
   maxCols?: number;
   add?: boolean;
-  orderCol?: any
+  orderCol?: any;
 };
 
 export default function DataTable(props: TableProps) {
@@ -94,16 +96,13 @@ export default function DataTable(props: TableProps) {
     clearCell = false,
     maxCols = 100,
     add = false,
-    orderCol=""
-
+    orderCol = "",
   } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(orderCol);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-
 
   const [tableRows, setRow] = useState(rows);
   const [addRow, setAddwRow] = useState(false);
@@ -121,19 +120,16 @@ export default function DataTable(props: TableProps) {
     setAddwRow(!addRow);
   };
 
-  const handleSaveOrder=(order:any) =>{
-    tableRows.push(order)
-    setRow(tableRows)
+  const handleSaveOrder = (order: any) => {
+    tableRows.push(order);
+    setRow(tableRows);
     setAddwRow(false);
-
-  }
-  const handleRemoveOrder=(index:any) =>{
-    const newtableRows= tableRows.filter((data,i)=>index!==i)
-    setRow(newtableRows)
+  };
+  const handleRemoveOrder = (index: any) => {
+    const newtableRows = tableRows.filter((data, i) => index !== i);
+    setRow(newtableRows);
     setAddwRow(false);
-
-  }
-
+  };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, rowData: Data) => {
     event.preventDefault();
@@ -192,18 +188,35 @@ export default function DataTable(props: TableProps) {
                       tabIndex={-1}
                       key={index}
                     >
-                      {Object.keys(row).map(
-                        (r: string, i: number) =>
+                      {Object.keys(row).map((r: string, i: number) => {
+                        let data: any = row[r as keyof typeof row];
+
+                        console.log("RR", r);
+                        console.log("RR-DATA", row[r]);
+
+                        if (r === "trndate") {
+                          data = moment(row[r]).format("DD/MM/YY");
+                        }
+
+                        if (r === "xdocname") {
+                          const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${row[r]}`;
+
+                          data = <img alt="xdocname" src={path} height='90' />;
+                        }
+
+                        return (
                           i < maxCols &&
                           headCells.some((e: any) => e.id === r) && (
-                            <TableCell key={i}>
-                              {row[r as keyof typeof row]}
-                            </TableCell>
+                            <TableCell key={i}>{data}</TableCell>
                           )
-                      )}
+                        );
+                      })}
                       {clearCell && (
                         <TableCell key={`${index}-cancel`}>
-                          <CancelIcon color="error"  onClick={()=>handleRemoveOrder(index)} />
+                          <CancelIcon
+                            color="error"
+                            onClick={() => handleRemoveOrder(index)}
+                          />
                         </TableCell>
                       )}
                     </TableRow>

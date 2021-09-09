@@ -1,8 +1,10 @@
 // *https://www.registers.service.gov.uk/registers/country/use-the-api*
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { createFilterOptions } from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { getData } from "../api/fetch";
 
 interface CountryType {
   name: string;
@@ -18,12 +20,15 @@ export default function Asynchronous() {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<CountryType[]>([]);
   const [value, setValue] = React.useState("");
+  const [selectedValue, setSelectedValue] = React.useState(null);
+
+
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = (e) => {
     console.log("e", e.target.value);
     const v = e.target.value;
-    if (v.length >= 4) {
+    if (v.length === 4) {
       setLoading(true);
       setValue(v);
     }
@@ -39,23 +44,30 @@ export default function Asynchronous() {
 
     (async () => {
       if (value) {
-        const response = await fetch(
-          `https://rickandmortyapi.com/api/character/?name=${value}`
+        const data = {
+          SearchValue: value,
+          BOption: 0,
+          DFrom: null,
+          DTo: null,
+          TakeRecs: null,
+          Id: null,
+          LastId: null,
+          AFM: "Προφίλ",
+        };
+
+        const response = await getData(
+          "https://80.245.167.105:19580/erpapi/getitems/obj?pars=",
+          data
         );
         //await sleep(1e3); // For demo purposes.
 
-        const countries = await response.json();
-
-        console.log("countries", countries);
-        const { results = [], error = null } = countries;
-
-        const data = results.map((item: any) => {
-          return { name: item.name, value: item.id };
+        const list = response.map((item: any) => {
+          return { name: item.name, value: item.code };
         });
         console.log("data", data);
 
         if (active) {
-          setOptions(data ? data : []);
+          setOptions(list ? list : []);
           setLoading(false);
         }
       }
@@ -72,8 +84,12 @@ export default function Asynchronous() {
     }
   }, [open]);
 
+  const filterOptions = createFilterOptions({
+    stringify: (option:any) => option.value,
+  });
   return (
     <Autocomplete
+      filterOptions={filterOptions}
       id="asynchronous-demo"
       style={{ width: 300 }}
       open={open}
@@ -83,18 +99,25 @@ export default function Asynchronous() {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionSelected={(option, value) => option.name === value.name}
+      onChange={(e,v) => {
+        console.log("v.value",v.value)
+        setSelectedValue(v.value)
+      }}
+      
+      getOptionSelected={(option, value) => option.code === value.code}
       getOptionLabel={(option) => option.name}
       options={options}
       loading={loading}
       renderInput={(params) => (
         <TextField
           {...params}
+          
           label="Asynchronous"
           variant="outlined"
           onChange={handleChange}
           InputProps={{
             ...params.InputProps,
+            value:{value},
             endAdornment: (
               <React.Fragment>
                 {loading ? (
@@ -102,7 +125,7 @@ export default function Asynchronous() {
                 ) : null}
                 {params.InputProps.endAdornment}
               </React.Fragment>
-            )
+            ),
           }}
         />
       )}
