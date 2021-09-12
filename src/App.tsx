@@ -39,7 +39,6 @@ function App() {
   useEffect(() => {
 
     const afmValue:any = document.getElementById('userAfm')
-    console.log(afmValue)
     if(afmValue.value){
       setAfm(afmValue.value)
     }

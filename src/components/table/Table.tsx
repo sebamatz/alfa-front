@@ -191,9 +191,6 @@ export default function DataTable(props: TableProps) {
                       {Object.keys(row).map((r: string, i: number) => {
                         let data: any = row[r as keyof typeof row];
 
-                        console.log("RR", r);
-                        console.log("RR-DATA", row[r]);
-
                         if (r === "trndate") {
                           data = moment(row[r]).format("DD/MM/YY");
                         }
@@ -201,7 +198,7 @@ export default function DataTable(props: TableProps) {
                         if (r === "xdocname") {
                           const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${row[r]}`;
 
-                          data = <img alt="xdocname" src={path} height='90' />;
+                          data = <img alt="xdocname" src={path} height="90" />;
                         }
 
                         return (

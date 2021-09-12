@@ -55,6 +55,11 @@ export const Orders = ({orders}:any) => {
     setDetails(orders[generatedKey]);
   };
 
+  const getSearchData=(data)=>{
+    console.log('Search data',data)
+    // post with data
+  }
+
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
@@ -84,11 +89,11 @@ export const Orders = ({orders}:any) => {
             <OrderOptions optionValue={optionValue} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            {value !== PENDING && <DatePickers getDateFrom={setDateFrom} getDateTo={setDateTo} />}
+            {value !== PENDING && <DatePickers getSearchData={getSearchData} getDateFrom={setDateFrom} getDateTo={setDateTo} />}
           </Grid>
         </Grid>
       </Grid>
-      <Grid item lg={12} sm={12} className={classes.table}>
+      <Grid item lg={6} sm={12} className={classes.table}>
         <DataTable
           name="master"
           onRowclick={getDetails}
@@ -97,6 +102,7 @@ export const Orders = ({orders}:any) => {
           maxCols={3}
         />
       </Grid>
+      <Grid item xs={6}/>
       <Grid item lg={12} sm={12} className={classes.table}>
         <Grid item xs={12} >
         <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
