@@ -14,6 +14,7 @@ import { NewRow } from "./NewRow";
 
 import { HeadCell, Data } from "../../types";
 import { AnyTxtRecord } from "dns";
+import { Button } from "@material-ui/core";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -159,9 +160,9 @@ export default function DataTable(props: TableProps) {
       <form>
         <TableContainer>
           {add && (
-            <button onClick={handleAddRowClick}>
-              {addRow ? "CANCEL" : "ADD"}
-            </button>
+            <Button variant="contained" color="primary" onClick={handleAddRowClick}>
+              {addRow ? "ΑΚΥΡΩΣΗ Χ" : "ΠΡΟΣΘΗΚΗ +"}
+            </Button>
           )}
           <Table
             className={classes.table}

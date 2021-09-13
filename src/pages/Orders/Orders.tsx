@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 
 import DataTable from "../../components/table/Table";
 import { HeadCell, Data } from "../../types";
@@ -8,7 +10,9 @@ import Grid from "@material-ui/core/Grid";
 import { PENDING } from "../constants";
 import OrderOptions from "./components/OrderOptions";
 import DatePickers from "./components/DatePickers";
-import { Typography } from "@material-ui/core";
+import {Typography } from "@material-ui/core";
+import BackToMenu from "../../components/BackToMenu";
+import { getData } from "../../api/fetch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,43 +26,52 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     table: {
       overflow: "auto",
-      marginTop:theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
-    title:{
+    title: {
       padding: theme.spacing(2),
+    },
+    link:{
+      textDecoration: "none",
     }
   })
 );
 
-export const Orders = ({orders}:any) => {
+export const Orders = ({ afm }: any) => {
+  const defaultData = {SearchValue: null, BOption: 2, DFrom: null, DTo: null, TakeRecs:null, Id:null, LastId:null, AFM:afm}
+
   const classes = useStyles();
   const [value, setValue] = useState(PENDING);
   const [orderDetails, setDetails] = useState([]);
+  const [orders,setOrders]=useState([])
+  const [query,setQuery]=useState(defaultData)
 
-  const [dateFrom, setDateFrom] = useState<Date | null>(
-    null
-  );
-  const [dateto, setDateTo] = useState<Date | null>(
-    null
-  );
 
-  const master = Object.keys(orders).map((key)=>{
-   return orders[key][0]}
-    )
+  const [dateFrom, setDateFrom] = useState<Date | null>(null);
+  const [dateto, setDateTo] = useState<Date | null>(null);
+
+  const master = Object.keys(orders).map((key) => {
+    return orders[key][0];
+  });
 
   const optionValue = (value: string) => {
+    value===PENDING&&setQuery(defaultData)
     setValue(value);
   };
 
   const getDetails = (data: any) => {
-    const {generatedKey} =data[0]
+    const { generatedKey } = data[0];
     setDetails(orders[generatedKey]);
   };
 
-  const getSearchData=(data)=>{
-    console.log('Search data',data)
+  const getSearchData = (data) => {
+    console.log("Search data", data);
+    const {text,from,to}=data
     // post with data
-  }
+    setQuery({...query,SearchValue:text,DFrom:from,DTo:to})
+  };
+
+
 
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
@@ -66,7 +79,7 @@ export const Orders = ({orders}:any) => {
     { id: "status", numeric: true, label: "STATUS" },
   ];
 
-  const headCellsDetails:any = [
+  const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
     { id: "status", numeric: false, label: "STATUS" },
@@ -75,12 +88,27 @@ export const Orders = ({orders}:any) => {
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
-    { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" }
+    { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
   ];
+
+  const fechOrders = (data)=>{
+    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data,true).then(data => setOrders(data))
+
+  }
+
+  useEffect(() => {
+
+    if(afm){
+      fechOrders({...query,afm:afm})
+    }
+  
+  }, [afm,query]);
 
   return (
     <Grid container spacing={3} justifyContent="center">
-      <Grid item xs={12} >
+      <BackToMenu />
+
+      <Grid item xs={12}>
         <Typography className={classes.title}>ΑΝΑΖΗΤΗΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
       </Grid>
       <Grid item xs={12}>
@@ -89,7 +117,13 @@ export const Orders = ({orders}:any) => {
             <OrderOptions optionValue={optionValue} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            {value !== PENDING && <DatePickers getSearchData={getSearchData} getDateFrom={setDateFrom} getDateTo={setDateTo} />}
+            {value !== PENDING && (
+              <DatePickers
+                getSearchData={getSearchData}
+                getDateFrom={setDateFrom}
+                getDateTo={setDateTo}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>
@@ -97,16 +131,16 @@ export const Orders = ({orders}:any) => {
         <DataTable
           name="master"
           onRowclick={getDetails}
-          rows={master}
+          rows={orders&&master}
           headCells={headCells}
           maxCols={3}
         />
       </Grid>
-      <Grid item xs={6}/>
+      <Grid item xs={6} />
       <Grid item lg={12} sm={12} className={classes.table}>
-        <Grid item xs={12} >
-        <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
-      </Grid>
+        <Grid item xs={12}>
+          <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
+        </Grid>
         <DataTable
           name="details"
           onRowclick={getDetails}

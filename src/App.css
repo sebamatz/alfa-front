@@ -12,3 +12,8 @@
   all: inherit;
   height: auto;
 }
+
+
+#root *[class*="MuiTableCell-root"] img {
+  height: 80px;
+}

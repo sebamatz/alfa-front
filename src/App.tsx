@@ -29,28 +29,19 @@ const theme = createTheme({
 
 function App() {
 
-
-  const [orders,setOrders]=useState([])
   const [afm,setAfm]=useState(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const data = {SearchValue: null, BOption: 2, DFrom: null, DTo: null, TakeRecs:null, Id:null, LastId:null, AFM:afm}
 
   useEffect(() => {
 
     const afmValue:any = document.getElementById('userAfm')
-    if(afmValue.value){
+    if(afmValue){
       setAfm(afmValue.value)
     }
 }, [afm]);
 
-useEffect(() => {
 
-  if(afm){
-    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data,true).then(data => setOrders(data))
-  }
-
-}, [afm]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -64,7 +55,7 @@ useEffect(() => {
                 <Dashboard />
               </Route>
               <Route path="/orders">
-                <Orders orders={orders} />
+                <Orders afm={afm}  />
               </Route>
                <Route path="/new">
                 <NewOrder />

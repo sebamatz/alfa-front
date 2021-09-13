@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 import DataTable from "../../components/table/Table";
+import BackToMenu from "../../components/BackToMenu";
+
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -51,6 +53,7 @@ export const NewOrder = ({orders}:any) => {
 
   return (
     <Grid container spacing={3} justifyContent="center">
+      <BackToMenu />
       <Grid item xs={12} >
         <Typography className={classes.title}>ΑΝΑΖΗΤΗΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
       </Grid>
