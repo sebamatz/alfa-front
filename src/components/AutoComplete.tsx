@@ -26,16 +26,14 @@ export default function Asynchronous() {
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = (e) => {
-    console.log("e", e.target.value);
     const v = e.target.value;
-    if (v.length === 4) {
+    if (v.length >= 4) {
       setLoading(true);
       setValue(v);
     }
   };
 
   React.useEffect(() => {
-    console.log("value", value);
     let active = true;
 
     if (!loading) {
@@ -64,7 +62,6 @@ export default function Asynchronous() {
         const list = response.map((item: any) => {
           return { name: item.name, value: item.code };
         });
-        console.log("data", data);
 
         if (active) {
           setOptions(list ? list : []);
@@ -100,7 +97,6 @@ export default function Asynchronous() {
         setOpen(false);
       }}
       onChange={(e,v) => {
-        console.log("v.value",v.value)
         setSelectedValue(v.value)
       }}
       

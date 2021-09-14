@@ -22,7 +22,7 @@ const BackToMenu: React.FunctionComponent<IAppProps> = (props) => {
  
  return (
     <Link className={classes.link} to="/#">
-      <Button color="primary" startIcon={<ArrowBackIcon />}>
+      <Button variant="contained" color="primary" startIcon={<ArrowBackIcon />}>
         Menu
       </Button>
     </Link>

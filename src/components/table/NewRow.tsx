@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { TableRow, Input, TableCell, IconButton } from "@material-ui/core";
+import { TableRow, Input, TableCell, IconButton, FormControl, InputLabel, MenuItem } from "@material-ui/core";
+import Select from '@material-ui/core/Select';
 import { SaveRounded } from "@material-ui/icons";
 
 import Autocomplete from "../AutoComplete"
@@ -10,7 +11,7 @@ interface Props {
 
 export const NewRow = ({saveOrder}:Props) => {
   const defaultValues = {
-    fincode: "",
+    fincode: 10,
     sku: "",
     mtrlname: "",
     qtY2: "",
@@ -23,12 +24,10 @@ export const NewRow = ({saveOrder}:Props) => {
   const { fincode, sku, mtrlname, qtY2, qtY1, xdocname, commentS1 } = values;
 
   const handleChange = (e: any) => {
-    console.log("EEE", e);
+    console.log("EEEE",e)
     const name = e.target.name;
     const val = e.target.value;
-
     const newValue = { ...values, [name]: val };
-    console.log("newValuenewValue", newValue);
     setValue(newValue);
   };
 
@@ -36,13 +35,26 @@ export const NewRow = ({saveOrder}:Props) => {
   return (
     <TableRow>
       <TableCell>
-        <Input name="fincode" value={fincode} onChange={handleChange} />
+        {/* <Input name="fincode" value={fincode} onChange={handleChange} /> */}
+        <FormControl>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={fincode}
+          onChange={handleChange}
+          name="fincode"
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
       </TableCell>
       <TableCell>
         <Autocomplete />
       </TableCell>
       <TableCell>
-        <Input name="mtrlname" value={mtrlname} onChange={handleChange} />
+        <Input  value={mtrlname} onChange={handleChange} />
       </TableCell>
       <TableCell>
         <Input type='number' name="qtY2" value={qtY2} onChange={handleChange} />

@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import CancelIcon from "@material-ui/icons/Cancel";
 import TableRow from "@material-ui/core/TableRow";
+import ImageIcon from "@material-ui/icons/Image";
 import moment from "moment";
 
 import EnhancedTableHead from "./Head";
@@ -86,6 +87,7 @@ type TableProps = {
   maxCols?: number;
   add?: boolean;
   orderCol?: any;
+  getRows?: (data: any) => void;
 };
 
 export default function DataTable(props: TableProps) {
@@ -98,6 +100,7 @@ export default function DataTable(props: TableProps) {
     maxCols = 100,
     add = false,
     orderCol = "",
+    getRows,
   } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
@@ -123,12 +126,18 @@ export default function DataTable(props: TableProps) {
 
   const handleSaveOrder = (order: any) => {
     tableRows.push(order);
+    getRows(tableRows);
+
     setRow(tableRows);
+
     setAddwRow(false);
   };
   const handleRemoveOrder = (index: any) => {
     const newtableRows = tableRows.filter((data, i) => index !== i);
+    getRows(newtableRows);
+
     setRow(newtableRows);
+
     setAddwRow(false);
   };
 
@@ -149,8 +158,8 @@ export default function DataTable(props: TableProps) {
   };
 
   useEffect(() => {
-    setRow(rows);
-  }, [rows]);
+    !add && setRow(rows);
+  }, [rows, add]);
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -160,7 +169,11 @@ export default function DataTable(props: TableProps) {
       <form>
         <TableContainer>
           {add && (
-            <Button variant="contained" color="primary" onClick={handleAddRowClick}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddRowClick}
+            >
               {addRow ? "ΑΚΥΡΩΣΗ Χ" : "ΠΡΟΣΘΗΚΗ +"}
             </Button>
           )}
@@ -197,9 +210,14 @@ export default function DataTable(props: TableProps) {
                         }
 
                         if (r === "xdocname") {
-                          const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${row[r]}`;
+                          const imagefile = row[r];
+                          const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imagefile}`;
 
-                          data = <img alt="xdocname" src={path} height="90" />;
+                          data = imagefile ? (
+                            <img alt="xdocname" src={path} height="90" />
+                          ) : (
+                            <ImageIcon />
+                          );
                         }
 
                         return (

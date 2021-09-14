@@ -93,8 +93,8 @@ const DatePickers = ({ getDateFrom, getDateTo ,getSearchData}: Props) => {
 
   const handleSearch = () => {
 
-    const from = moment(selectedDateFrom).format("DD/MM/YY")
-    const to = moment(selectedDateTo).format("DD/MM/YY")
+    const from = moment(selectedDateFrom).format("YYYYMMDD")
+    const to = moment(selectedDateTo).format("YYYYMMDD")
 
 
     const search = { from, to, text };

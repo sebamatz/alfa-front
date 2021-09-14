@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       padding: theme.spacing(2),
+      textAlign: "center",
     },
     link:{
       textDecoration: "none",
@@ -65,7 +66,6 @@ export const Orders = ({ afm }: any) => {
   };
 
   const getSearchData = (data) => {
-    console.log("Search data", data);
     const {text,from,to}=data
     // post with data
     setQuery({...query,SearchValue:text,DFrom:from,DTo:to})
