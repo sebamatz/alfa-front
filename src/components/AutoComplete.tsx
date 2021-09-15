@@ -76,6 +76,7 @@ export default function Asynchronous() {
   }, [value]);
 
   React.useEffect(() => {
+    console.log("selectedValue",selectedValue)
     if (!open) {
       setOptions([]);
     }
@@ -97,23 +98,24 @@ export default function Asynchronous() {
         setOpen(false);
       }}
       onChange={(e,v) => {
-        setSelectedValue(v.value)
+        // console.log(v.value)
+
+        v&&setSelectedValue(v.value)
       }}
+
       
       getOptionSelected={(option, value) => option.code === value.code}
-      getOptionLabel={(option) => option.name}
+      renderOption={(option) =><div>{option.name}</div>}
       options={options}
       loading={loading}
+      value={selectedValue}
       renderInput={(params) => (
         <TextField
           {...params}
-          
-          label="Asynchronous"
           variant="outlined"
           onChange={handleChange}
           InputProps={{
             ...params.InputProps,
-            value:{value},
             endAdornment: (
               <React.Fragment>
                 {loading ? (
@@ -123,6 +125,7 @@ export default function Asynchronous() {
               </React.Fragment>
             ),
           }}
+          
         />
       )}
     />

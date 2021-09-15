@@ -18,6 +18,8 @@ export const NewRow = ({saveOrder}:Props) => {
     qtY1: "",
     xdocname: "",
     commentS1: "",
+    actions: "",
+
   };
 
   const [values, setValue] = useState(defaultValues);
@@ -72,7 +74,6 @@ export const NewRow = ({saveOrder}:Props) => {
         <IconButton
         onClick={handleSave}
           color="primary"
-          aria-label="upload picture"
           component="span"
         >
           <SaveRounded />
