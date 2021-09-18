@@ -1,196 +1,33 @@
-const data1 = [
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "Επεξεργασία",
-    sku: "10240",
-    mtrlines: 3,
-    mtrlcode: "4FA10240000L",
-    mtrlname: "ΠΕΡΣΙΔΑ ΜΟΝΗ ΛΕΥΚΟ",
-    qtY2: 100,
-    qtY1: 239,
-    xdocname: "1024-01.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "32165",
-    mtrlines: 4,
-    mtrlcode: "4FA32165000L",
-    mtrlname: "THERMO ΤΡΙΠΛΟΣ ΟΔΗΓΟΣ ΓΙΑ TΡΙΦ.ΕΠΑΛΛ.&ΤΖ-ΣΙΤ-ΠΑ ΛΕΥΚΟ",
-    qtY2: 20,
-    qtY1: 252,
-    xdocname: "32165.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "32251",
-    mtrlines: 5,
-    mtrlcode: "4FA32251000L",
-    mtrlname: "THERMO ΦΥΛΛΟ ΤΖΑΜΙΟΥ ΙΣΙΟ ΘΕΡΜΟΜΟΝΩΤΙΚΟ ΛΕΥΚΟ",
-    qtY2: 20,
-    qtY1: 177.8,
-    xdocname: "32251.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "35138",
-    mtrlines: 6,
-    mtrlcode: "4FA35138000L",
-    mtrlname: "ΟΔΗΓΟΣ ΕΠΑΛ.-ΣΙΤΑ Νο35138 ΛΕΥΚΟ",
-    qtY2: 10,
-    qtY1: 85.4,
-    xdocname: "35138.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "35215",
-    mtrlines: 7,
-    mtrlcode: "4FA35215000L",
-    mtrlname: "ΦΥΛΛΟ ΣΥΡΟΜΕΝΟΥ 85 ΛΕΥΚΟ",
-    qtY2: 15,
-    qtY1: 103.5,
-    xdocname: "35215.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900598",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "32130",
-    mtrlines: 8,
-    mtrlcode: "4FA32130000L",
-    mtrlname: "ΤΡΙΠΛΟΣ ΟΔΗΓΟΣ ΛΕΥΚΟ",
-    qtY2: 10,
-    qtY1: 79.4,
-    xdocname: "32130.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-
-  {
-    fincode: "PARX900599",
-    trndate: "2021-07-05T00:00:00",
-    status: "Επεξεργασία",
-    sku: "10240",
-    mtrlines: 3,
-    mtrlcode: "4FA10240000L",
-    mtrlname: "ΠΕΡΣΙΔΑ ΜΟΝΗ ΛΕΥΚΟ",
-    qtY2: 100,
-    qtY1: 239,
-    xdocname: "1024-01.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900599",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "32165",
-    mtrlines: 4,
-    mtrlcode: "4FA32165000L",
-    mtrlname: "THERMO ΤΡΙΠΛΟΣ ΟΔΗΓΟΣ ΓΙΑ TΡΙΦ.ΕΠΑΛΛ.&ΤΖ-ΣΙΤ-ΠΑ ΛΕΥΚΟ",
-    qtY2: 20,
-    qtY1: 252,
-    xdocname: "32165.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900599",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "32251",
-    mtrlines: 5,
-    mtrlcode: "4FA32251000L",
-    mtrlname: "THERMO ΦΥΛΛΟ ΤΖΑΜΙΟΥ ΙΣΙΟ ΘΕΡΜΟΜΟΝΩΤΙΚΟ ΛΕΥΚΟ",
-    qtY2: 20,
-    qtY1: 177.8,
-    xdocname: "32251.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900599",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "35138",
-    mtrlines: 6,
-    mtrlcode: "4FA35138000L",
-    mtrlname: "ΟΔΗΓΟΣ ΕΠΑΛ.-ΣΙΤΑ Νο35138 ΛΕΥΚΟ",
-    qtY2: 10,
-    qtY1: 85.4,
-    xdocname: "35138.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-  {
-    fincode: "PARX900599",
-    trndate: "2021-07-05T00:00:00",
-    status: "",
-    sku: "35215",
-    mtrlines: 7,
-    mtrlcode: "4FA35215000L",
-    mtrlname: "ΦΥΛΛΟ ΣΥΡΟΜΕΝΟΥ 85 ΛΕΥΚΟ",
-    qtY2: 15,
-    qtY1: 103.5,
-    xdocname: "35215.jpg",
-    commentS1: null,
-    code: "05-1001-0036",
-    name: "ΓΑΛΑΚΤΙΔΗΣ ΒΑΣ. & ΣΙΑ ΟΕ",
-    afm: "082830016",
-  },
-];
-
-const groupBy = (keys:any) => (array:any) =>
-    array.reduce((objectsByKeyValue:any, obj:any) => {
-    const value = keys.map((key:any) => obj[key]).join('-');
-    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat({...obj,generatedKey:value});
+const groupBy = (keys: any) => (array: any) =>
+  array.reduce((objectsByKeyValue: any, obj: any) => {
+    const value = keys.map((key: any) => obj[key]).join("-");
+    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat({
+      ...obj,
+      generatedKey: value,
+    });
     return objectsByKeyValue;
   }, {});
 
-
-export async function getData(url = "", params: any = {},short=false) {
+export async function getData(url = "", params: any = {}, short = false) {
   const queryString = encodeURIComponent(JSON.stringify(params));
   const structUrl = url + queryString;
   const response = await fetch(structUrl);
   const data = await response.json(); // parses JSON response into native JavaScript objects
-  const groupFincodeStatus = groupBy(['fincode', 'status']);
-  return short?groupFincodeStatus(data):data;
+  const groupFincodeStatus = groupBy(["fincode", "status"]);
+  return short ? groupFincodeStatus(data) : data;
 }
+
+// returs client orders
+export const fechOrders = async (data) => {
+  const result = await getData(
+    "https://80.245.167.105:19580/erpapi/getorders/obj?pars=",
+    data,
+    true
+  );
+  return result;
+};
+
+export const fechGroups = async () => {
+  const result = await fetch("https://80.245.167.105:19580/erpapi/getgroups");
+  return await result.json();
+};

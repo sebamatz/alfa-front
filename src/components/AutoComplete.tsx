@@ -1,39 +1,40 @@
 // *https://www.registers.service.gov.uk/registers/country/use-the-api*
-import React from "react";
+import { Fragment, useContext, useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { createFilterOptions } from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { getData } from "../api/fetch";
+import { NewOrderContext } from "../pages/NewOrder/NewOrderContext";
 
 interface CountryType {
   name: string;
+  data: any;
 }
 
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
+export default function Asynchronous({ setSelectedData,searchValue}) {
+ 
 
-export default function Asynchronous() {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<CountryType[]>([]);
-  const [value, setValue] = React.useState("");
-  const [selectedValue, setSelectedValue] = React.useState(null);
-
-
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const v = e.target.value;
-    if (v.length >= 4) {
+    if (v.length > 3) {
       setLoading(true);
       setValue(v);
     }
   };
 
-  React.useEffect(() => {
+  const {data} = useContext(NewOrderContext);
+  const {fincode,color,search}=data
+
+
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState<CountryType[]>([]);
+  const [value, setValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(search);
+
+  useEffect(() => {
     let active = true;
 
     if (!loading) {
@@ -44,13 +45,13 @@ export default function Asynchronous() {
       if (value) {
         const data = {
           SearchValue: value,
-          BOption: 0,
+          BOption: color.v,
           DFrom: null,
           DTo: null,
           TakeRecs: null,
           Id: null,
           LastId: null,
-          AFM: "Προφίλ",
+          AFM: fincode,
         };
 
         const response = await getData(
@@ -60,7 +61,7 @@ export default function Asynchronous() {
         //await sleep(1e3); // For demo purposes.
 
         const list = response.map((item: any) => {
-          return { name: item.name, value: item.code };
+          return { name: item.name, value: item.code, data: item };
         });
 
         if (active) {
@@ -75,15 +76,19 @@ export default function Asynchronous() {
     };
   }, [value]);
 
-  React.useEffect(() => {
-    console.log("selectedValue",selectedValue)
+  useEffect(() => {
+    console.log("selectedValue", selectedValue);
     if (!open) {
       setOptions([]);
     }
   }, [open]);
 
+  const taleValues = useContext(NewOrderContext);
+
+  console.log("taleValues", taleValues);
+
   const filterOptions = createFilterOptions({
-    stringify: (option:any) => option.value,
+    stringify: (option: any) => option.value,
   });
   return (
     <Autocomplete
@@ -97,15 +102,16 @@ export default function Asynchronous() {
       onClose={() => {
         setOpen(false);
       }}
-      onChange={(e,v) => {
-        // console.log(v.value)
-
-        v&&setSelectedValue(v.value)
+      onChange={(e, v) => {
+        console.log("sSSSSS", v);
+        v ? setSelectedValue(v.value) : setSelectedValue("");
+        if (v) {
+          const selectedData = options.filter((d: any) => d.value === v.value);
+          selectedData && setSelectedData(selectedData[0]?.data);
+        }
       }}
-
-      
       getOptionSelected={(option, value) => option.code === value.code}
-      renderOption={(option) =><div>{option.name}</div>}
+      renderOption={(option) => option.name}
       options={options}
       loading={loading}
       value={selectedValue}
@@ -117,15 +123,14 @@ export default function Asynchronous() {
           InputProps={{
             ...params.InputProps,
             endAdornment: (
-              <React.Fragment>
+              <Fragment>
                 {loading ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </Fragment>
             ),
           }}
-          
         />
       )}
     />

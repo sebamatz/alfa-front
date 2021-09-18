@@ -3,7 +3,6 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard";
 import { Orders } from "./pages/Orders/Orders";
 import { NewOrder } from "./pages/NewOrder/NewOrder"
-import {getData} from "./api/fetch"
 import "./App.css";
 import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core/styles';

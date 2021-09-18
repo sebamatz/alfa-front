@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-
 import DataTable from "../../components/table/Table";
 import { HeadCell, Data } from "../../types";
 
@@ -10,9 +9,9 @@ import Grid from "@material-ui/core/Grid";
 import { PENDING } from "../constants";
 import OrderOptions from "./components/OrderOptions";
 import DatePickers from "./components/DatePickers";
-import {Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import BackToMenu from "../../components/BackToMenu";
-import { getData } from "../../api/fetch";
+import { fechOrders } from "../../api/fetch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,21 +31,29 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       textAlign: "center",
     },
-    link:{
+    link: {
       textDecoration: "none",
-    }
+    },
   })
 );
 
 export const Orders = ({ afm }: any) => {
-  const defaultData = {SearchValue: null, BOption: 2, DFrom: null, DTo: null, TakeRecs:null, Id:null, LastId:null, AFM:afm}
+  const defaultData = {
+    SearchValue: null,
+    BOption: 2,
+    DFrom: null,
+    DTo: null,
+    TakeRecs: null,
+    Id: null,
+    LastId: null,
+    AFM: afm,
+  };
 
   const classes = useStyles();
   const [value, setValue] = useState(PENDING);
   const [orderDetails, setDetails] = useState([]);
-  const [orders,setOrders]=useState([])
-  const [query,setQuery]=useState(defaultData)
-
+  const [orders, setOrders] = useState([]);
+  const [query, setQuery] = useState(defaultData);
 
   const [dateFrom, setDateFrom] = useState<Date | null>(null);
   const [dateto, setDateTo] = useState<Date | null>(null);
@@ -56,7 +63,7 @@ export const Orders = ({ afm }: any) => {
   });
 
   const optionValue = (value: string) => {
-    value===PENDING&&setQuery(defaultData)
+    value === PENDING && setQuery(defaultData);
     setValue(value);
   };
 
@@ -66,12 +73,10 @@ export const Orders = ({ afm }: any) => {
   };
 
   const getSearchData = (data) => {
-    const {text,from,to}=data
+    const { text, from, to } = data;
     // post with data
-    setQuery({...query,SearchValue:text,DFrom:from,DTo:to})
+    setQuery({ ...query, SearchValue: text, DFrom: from, DTo: to });
   };
-
-
 
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
@@ -91,18 +96,16 @@ export const Orders = ({ afm }: any) => {
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
   ];
 
-  const fechOrders = (data)=>{
-    getData("https://80.245.167.105:19580/erpapi/getorders/obj?pars=",data,true).then(data => setOrders(data))
-
-  }
+  const getOrders = async (data) => {
+    const orders: any = await fechOrders(data);
+    setOrders(orders);
+  };
 
   useEffect(() => {
-
-    if(afm){
-      fechOrders({...query,afm:afm})
+    if (afm) {
+      getOrders({ ...query, afm: afm });
     }
-  
-  }, [afm,query]);
+  }, [afm, query]);
 
   return (
     <Grid container spacing={3} justifyContent="center">
@@ -131,7 +134,7 @@ export const Orders = ({ afm }: any) => {
         <DataTable
           name="master"
           onRowclick={getDetails}
-          rows={orders&&master}
+          rows={orders && master}
           headCells={headCells}
           maxCols={3}
         />

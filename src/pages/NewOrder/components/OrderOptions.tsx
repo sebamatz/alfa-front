@@ -54,7 +54,7 @@ const OrderOptions = ({ optionValue,isDisabled }: Props) => {
   const handleChangeColor = (event: React.ChangeEvent<HTMLInputElement>) => {
     const c = (event.target as HTMLInputElement).value;
     setColor(c);
-    optionValue({ value, c });
+    optionValue(c);
   };
   return (
     <FormControl component="fieldset">

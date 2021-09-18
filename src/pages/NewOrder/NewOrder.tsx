@@ -1,13 +1,14 @@
-import { useState,useCallback } from "react";
+import { useState,useCallback,createContext } from "react";
 
 import DataTable from "../../components/table/Table";
 import BackToMenu from "../../components/BackToMenu";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { PENDING } from "../constants";
 import OrderOptions from "./components/OrderOptions";
 import { Typography } from "@material-ui/core";
+import  {NewOrderContext} from "./NewOrderContext";
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,26 +31,71 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+
 export const NewOrder = ({ orders }: any) => {
-  const classes = useStyles();
-  const [value, setValue] = useState(PENDING);
-  const [rowCount, setRowCount] = useState(false);
-
-
   const optionValue = (value: string) => {
-    setValue(value);
+    setColor(value);
+  };
+
+  const getType = (value: string) => {
+    setGroup(value);
   };
 
 
   const getRows = useCallback(
     (rows) => {
-      setRowCount(rows.length>0)
+      setRows(rows)
     },
     [],
   );
+  
+  const getSelection = useCallback(
+    (selectionData) => {
+      setSelectedInfo(selectionData)
+    },
+    [],
+  );
+  const resetSelection = useCallback(
+    () => {
+      setSelectedInfo(defaultValues.data)
+    },
+    [],
+  );
+  const defaultValues: any = {
+    data:{ search:null,
+     fincode: "Πρόφιλ",
+     sku: "",
+     mtrlname: "",
+     qtY2: 1,
+     qtY1: null,
+     xdocname: "",
+     commentS1: "",
+     actions: "",
+     color:"0"
+    },
+    actions:{
+      getType,
+      getSelection, 
+      resetSelection
+    }
+   };
+  const classes = useStyles();
+
+  // Sets value of the radio buttons
+  const [value, setColor] = useState("0");
+  const [type, setGroup] = useState("Πρόφιλ");
+  const [selectedInfo, setSelectedInfo] = useState(defaultValues.data)
+
+
+
+  //Defines disabled fields
+  const [rows, setRows] = useState([]);
+
+
+ 
 
   const headCellsDetails: any = [
-    { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
+    { id: "fincode", numeric: false, label: "ΟΜΑΔΑ" },
     { id: "sku", numeric: false, label: "ΚΩΔΙΚΟΣ" },
     { id: "mtrlname", numeric: false, label: "ΠΕΡΙΓΡΑΦΗ" },
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
@@ -58,7 +104,13 @@ export const NewOrder = ({ orders }: any) => {
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
   ];
 
+ 
+
+
+
+ 
   return (
+    <NewOrderContext.Provider value={{...defaultValues,selectedInfo}}>
     <Grid container spacing={3} justifyContent="center">
       <BackToMenu />
       <Grid item xs={12}>
@@ -67,7 +119,7 @@ export const NewOrder = ({ orders }: any) => {
       <Grid item xs={12}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <OrderOptions optionValue={optionValue} isDisabled={rowCount} />
+            <OrderOptions optionValue={optionValue} isDisabled={rows.length>0} />
           </Grid>
         </Grid>
       </Grid>
@@ -80,8 +132,9 @@ export const NewOrder = ({ orders }: any) => {
           rows={[]}
           add
           getRows={getRows}
-        />
+          />
       </Grid>
     </Grid>
+    </NewOrderContext.Provider>
   );
 };
