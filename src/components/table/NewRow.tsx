@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import {
   TableRow,
   Input,
@@ -20,99 +20,55 @@ interface Props {
   saveOrder: (values: any) => void;
 }
 
-const defaultvalues = {
-  search: null,
-  fincode: "Πρόφιλ",
-  sku: "",
-  mtrlname: "",
-  qtY2: 1,
-  qtY1: null,
-  xdocname: "",
-  commentS1: "",
-  actions: "",
-  color: "0",
-};
-
 export const NewRow = ({ saveOrder }: Props) => {
-  const { data, actions } = useContext(NewOrderContext);
-  const { getType, getSelection } = actions;
+  const { selectedInfo, setWeight,actions,setComments } =useContext(NewOrderContext);
 
-  const [values, setValue] = useState(defaultvalues);
+  const {mtrlname,qtY1,qtY2,xdocname,commentS1,search} = selectedInfo.data;
+
   const [groups, setGroups] = useState([]);
-  const [weight, setWeigth] = useState(defaultvalues.qtY1);
-  const [group, setGroup] = useState(defaultvalues.fincode);
+  const [group, setGroup] = useState(selectedInfo.data.fincode);
 
   const handleChange = (e: any) => {
-    const name = e.target.name;
     let val = e.target.value;
-
-    console.log("name", name);
-    console.log("val", val);
-
-    let newValue = { ...values, [name]: val };
-    setValue(newValue);
-    if (name === "qtY2" && weight && val) {
-      const kg = (parseFloat(val) * parseFloat(weight)).toFixed(2);
-
-      // eslint-disable-next-line no-new-wrappers
-      var num = new Number(kg).toLocaleString("el-GR");
-      if (val > 0) {
-        newValue = {
-          ...values,
-          [name]: val,
-          qtY1: num,
-        };
-        setValue(newValue);
-      }
-    }
-    if (name === "fincode") {
-      setValue(defaultvalues);
-      setWeigth(null);
-
-      setGroup(val);
-      // getType(val);
+    if (val > 0) {
+      setWeight(val);
     }
   };
-  const getSelectedData = (selectedData) => {
-    console.log(selectedData);
-    getSelection(selectedData);
-    //code: "4FA10010000A"
-    // company: 1defaultValues
-    // mU12MODE: 1value,
-    // mU21: 3.45
-    // mtrl: 4856
-    // mtruniT2: 17    console.log("getSelectedData", data);
 
-    // u5NAME: "Προφίλ"
-    // utbL05: 1{
+  const handleChangeComments=(e: any) => {
+    let val = e.target.value;
+      setComments(val);
+  };
 
-    const newValues = {
-      ...values,
-      mtrlname: selectedData.name,
-      qtY1: selectedData.mU21,
-      sku: selectedData.code,
-      xdocname: selectedData.xdocname,
-    };
-    setWeigth(selectedData.mU21);
-    setValue(newValues);
+  const handleSelectFincode = (e: any) => {
+    let val = e.target.value;
+    actions.resetSelection();
+    setGroup(val);
   };
 
   const getGroups = useCallback(async () => {
     const groups = await fechGroups();
     setGroups(groups);
+
+    //sets default value
+    setGroup(groups[0].name);
   }, []);
 
   useEffect(() => {
     getGroups();
   }, [getGroups]);
 
-  const handleSave = () => saveOrder(values);
+  const handleSave = () => {
+    saveOrder(selectedInfo.data);
+    actions.resetSelection();
+  };
+
   return (
     <TableRow>
       <TableCell>
         <FormControl>
           {groups.length > 0 && (
-            <Select onChange={handleChange} name="fincode" value={group}>
+            <Select onChange={handleSelectFincode} name="fincode" value={group}>
               {groups.map((v: any, i) => (
                 <MenuItem value={v.name}>{v.name}</MenuItem>
               ))}
@@ -122,39 +78,22 @@ export const NewRow = ({ saveOrder }: Props) => {
       </TableCell>
       <TableCell>
         <Autocomplete
-          setSelectedData={getSelectedData}
-          searchValue={values.search}
         />
       </TableCell>
       <TableCell>
-        <Input
-          value={values.mtrlname}
-          disabled
-          onChange={handleChange}
-          title={values.mtrlname}
-        />
+        <Input value={mtrlname} disabled title={mtrlname} />
       </TableCell>
       <TableCell>
-        <Input
-          type="number"
-          name="qtY2"
-          value={values.qtY2}
-          onChange={handleChange}
-        />
+        <Input type="number" name="qtY2" value={qtY2} onChange={handleChange} />
       </TableCell>
       <TableCell>
-        <Input
-          name="qtY1"
-          value={values.qtY1}
-          disabled
-          onChange={handleChange}
-        />
+        <Input name="qtY1" value={qtY1} disabled />
       </TableCell>
       <TableCell>
-        {values.xdocname ? (
+        {xdocname ? (
           <img
             alt="xdocname"
-            src={`https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${values.xdocname}`}
+            src={`https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${xdocname}`}
             height="90"
           />
         ) : (
@@ -164,15 +103,17 @@ export const NewRow = ({ saveOrder }: Props) => {
       <TableCell>
         <Input
           name="commentS1"
-          value={values.commentS1}
-          onChange={handleChange}
+          value={commentS1}
+          onChange={handleChangeComments}
         />
       </TableCell>
-      <TableCell>
-        <IconButton onClick={handleSave} color="primary" component="span">
-          <SaveRounded />
-        </IconButton>
-      </TableCell>
+      {search && (
+        <TableCell>
+          <IconButton onClick={handleSave} color="primary" component="span">
+            <SaveRounded />
+          </IconButton>
+        </TableCell>
+      )}
     </TableRow>
   );
 };

@@ -1,4 +1,5 @@
-import { useState,useCallback,createContext } from "react";
+import { useState, useCallback,useEffect } from "react";
+import { NewOrderContext } from "./NewOrderContext";
 
 import DataTable from "../../components/table/Table";
 import BackToMenu from "../../components/BackToMenu";
@@ -7,8 +8,6 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
 import { Typography } from "@material-ui/core";
-import  {NewOrderContext} from "./NewOrderContext";
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,68 +30,104 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const defaultValues: any = {
+  data: {
+    search: null,
+    fincode: "Πρόφιλ",
+    sku: "",
+    mtrlname: "",
+    qtY2: "",
+    qtY1: "",
+    xdocname: "",
+    commentS1: "",
+    color: "0",
+    qtY1Def:"",
 
-export const NewOrder = ({ orders }: any) => {
-  const optionValue = (value: string) => {
-    setColor(value);
-  };
-
-  const getType = (value: string) => {
-    setGroup(value);
-  };
+  },
+};
+export const NewOrder = () => {
 
 
-  const getRows = useCallback(
-    (rows) => {
-      setRows(rows)
-    },
-    [],
-  );
-  
-  const getSelection = useCallback(
-    (selectionData) => {
-      setSelectedInfo(selectionData)
-    },
-    [],
-  );
-  const resetSelection = useCallback(
-    () => {
-      setSelectedInfo(defaultValues.data)
-    },
-    [],
-  );
-  const defaultValues: any = {
-    data:{ search:null,
-     fincode: "Πρόφιλ",
-     sku: "",
-     mtrlname: "",
-     qtY2: 1,
-     qtY1: null,
-     xdocname: "",
-     commentS1: "",
-     actions: "",
-     color:"0"
-    },
-    actions:{
-      getType,
-      getSelection, 
-      resetSelection
+  const [rows, setRows] = useState([]);
+
+  const [selectedInfo, setSelectedInfo] = useState(defaultValues);
+  const getRows = useCallback((rows) => {
+    setRows(rows);
+  }, []);
+
+  const getSelection = useCallback((selectionData) => {
+    setSelectedInfo({
+      ...selectedInfo,
+      "data": {
+        ...selectedInfo.data,
+        search: selectionData.code,
+        fincode: selectionData.u5NAME,
+        sku: selectionData.sku,
+        mtrlname: selectionData.name,
+        qtY1: selectionData.mU21,
+        qtY2: 1,
+        xdocname: selectionData.xdocname,
+        qtY1Def: selectionData.mU21,
+
+      },
+    });
+  }, [selectedInfo]);
+
+
+  const setComments = useCallback((comments) => {
+    setSelectedInfo({
+      ...selectedInfo,
+      "data": {
+        ...selectedInfo.data,
+        commentS1: comments
+
+      },
+    });
+  }, [selectedInfo]);
+
+
+
+  const setWeight = useCallback((selectionData) => {
+
+    const kg = (parseFloat(selectionData) * parseFloat(selectedInfo.data.qtY1Def)).toFixed(2);
+    // eslint-disable-next-line no-new-wrappers
+    const num = new Number(kg).toLocaleString("el-GR");
+    setSelectedInfo({
+      ...selectedInfo,
+      "data": {
+        ...selectedInfo.data,
+        qtY1: num,
+        qtY2: selectionData
+      },
     }
-   };
+    );
+  }, [selectedInfo]);
+
+  const resetSelection = useCallback(() => {
+    setSelectedInfo(defaultValues);
+  }, []);
+
+  const actions ={
+    getSelection,
+    resetSelection,
+  }
+
+ 
+
+
   const classes = useStyles();
 
   // Sets value of the radio buttons
-  const [value, setColor] = useState("0");
-  const [type, setGroup] = useState("Πρόφιλ");
-  const [selectedInfo, setSelectedInfo] = useState(defaultValues.data)
 
+  //Orders created
 
+  const handleSetSelectedValue = (val) => {
+    setSelectedInfo({
+      ...selectedInfo,
+      data: { ...selectedInfo.data, search: val },
+    });
+  };
 
-  //Defines disabled fields
-  const [rows, setRows] = useState([]);
-
-
- 
 
   const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΟΜΑΔΑ" },
@@ -104,37 +139,37 @@ export const NewOrder = ({ orders }: any) => {
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
   ];
 
- 
-
-
-
- 
   return (
-    <NewOrderContext.Provider value={{...defaultValues,selectedInfo}}>
-    <Grid container spacing={3} justifyContent="center">
-      <BackToMenu />
-      <Grid item xs={12}>
-        <Typography className={classes.title}>ΝΕΑ ΠΑΡΑΓΓΕΛΙΑ</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <OrderOptions optionValue={optionValue} isDisabled={rows.length>0} />
+    <NewOrderContext.Provider
+      value={{ selectedInfo,actions, handleSetSelectedValue,setWeight,setComments }}
+    >
+      <Grid container spacing={3} justifyContent="center">
+        <BackToMenu />
+        <Grid item xs={12}>
+          <Typography className={classes.title}>ΝΕΑ ΠΑΡΑΓΓΕΛΙΑ</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <OrderOptions
+                optionValue={defaultValues.data.fincode}
+                isDisabled={rows.length > 0}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid item lg={12} sm={12} className={classes.table}>
-        <DataTable
-          name="details"
-          onRowclick={() => false}
-          headCells={headCellsDetails}
-          clearCell
-          rows={[]}
-          add
-          getRows={getRows}
+        <Grid item lg={12} sm={12} className={classes.table}>
+          <DataTable
+            name="details"
+            onRowclick={() => false}
+            headCells={headCellsDetails}
+            clearCell
+            rows={[]}
+            add
+            getRows={getRows}
           />
+        </Grid>
       </Grid>
-    </Grid>
     </NewOrderContext.Provider>
   );
 };
