@@ -13,7 +13,7 @@ export async function getData(url = "", params: any = {}, short = false) {
   const structUrl = url + queryString;
   const response = await fetch(structUrl);
   const data = await response.json(); // parses JSON response into native JavaScript objects
-  const groupFincodeStatus = groupBy(["fincode", "status"]);
+  const groupFincodeStatus = groupBy(["trndate", "fincode", "status"]);
   return short ? groupFincodeStatus(data) : data;
 }
 
@@ -47,20 +47,6 @@ export const fechGroups = async () => {
   return await result;
 };
 
-//put order
-const defaults = [
-  {
-    company: 0,
-    boption: 0,
-    trdr: 3975,
-    trdbranch: 125,
-    comments: "string",
-    mtrl: 10069,
-    commentS1: "string",
-    qtY1: 45,
-    qtY2: 10,
-  },
-];
 //GET /erpapi/getbranches/obj
 
 export const getbranches = async (afm: string) => {
@@ -81,5 +67,35 @@ export const getbranches = async (afm: string) => {
     "https://80.245.167.105:19580/erpapi/getbranches/obj?pars=",
     data
   );
-  return await result;
+  console.log("getbranches", result);
+  return result;
 };
+//put order
+const defaults = [
+  {
+    company: 0,
+    bOption: 0,
+    trdr: 3975,
+    trdbranch: 125,
+    comments: "string444dfdfd",
+    mtrl: 10069,
+    commentS1: "string555666",
+    qtY1: 0,
+    qtY2: 0,
+  },
+];
+
+// Example POST method implementation:
+export async function postData(url = "", data = defaults) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "PUT", // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+  return response; // parses JSON response into native JavaScript objects
+}
+
+// /erpapi/putorder

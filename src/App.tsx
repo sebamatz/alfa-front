@@ -6,7 +6,7 @@ import { NewOrder } from "./pages/NewOrder/NewOrder";
 import "./App.css";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
-import { getbranches } from "./api/fetch";
+import { getbranches, postData } from "./api/fetch";
 import CompanyOptions from "./components/CompanyOptions";
 
 const theme = createTheme({
@@ -38,6 +38,12 @@ function App() {
       getbranches(afmValue.value);
     }
   }, [afm]);
+
+  useEffect(() => {
+    postData("https://80.245.167.105:19580/erpapi/putorder").then((data) => {
+      console.log(data); // JSON data parsed by `data.json()` call
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
