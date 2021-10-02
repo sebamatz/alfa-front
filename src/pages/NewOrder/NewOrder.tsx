@@ -1,4 +1,4 @@
-import { useState, useCallback,useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { NewOrderContext } from "./NewOrderContext";
 
 import DataTable from "../../components/table/Table";
@@ -40,80 +40,80 @@ const defaultValues: any = {
     qtY1: "",
     xdocname: "",
     commentS1: "",
-    color: "0",
-    qtY1Def:"",
-
+    comments: "",
+    qtY1Def: "",
   },
 };
+
 export const NewOrder = () => {
-
-
   const [rows, setRows] = useState([]);
+  const [orderColor, setOrderColor] = useState("0");
 
   const [selectedInfo, setSelectedInfo] = useState(defaultValues);
   const getRows = useCallback((rows) => {
     setRows(rows);
   }, []);
 
-  const getSelection = useCallback((selectionData) => {
-    setSelectedInfo({
-      ...selectedInfo,
-      "data": {
-        ...selectedInfo.data,
-        search: selectionData.code,
-        fincode: selectionData.u5NAME,
-        sku: selectionData.sku,
-        mtrlname: selectionData.name,
-        qtY1: selectionData.mU21,
-        qtY2: 1,
-        xdocname: selectionData.xdocname,
-        qtY1Def: selectionData.mU21,
+  const getSelection = useCallback(
+    (selectionData) => {
+      setSelectedInfo({
+        ...selectedInfo,
+        data: {
+          ...selectedInfo.data,
+          search: selectionData.sku,
+          fincode: selectionData.u5NAME,
+          sku: selectionData.sku,
+          mtrlname: selectionData.name,
+          qtY1: selectionData.mU21,
+          qtY2: 1,
+          xdocname: selectionData.xdocname,
+          qtY1Def: selectionData.mU21,
+        },
+      });
+    },
+    [selectedInfo]
+  );
 
-      },
-    });
-  }, [selectedInfo]);
+  const setComments = useCallback(
+    (comments) => {
+      setSelectedInfo({
+        ...selectedInfo,
+        data: {
+          ...selectedInfo.data,
+          comments: comments,
+        },
+      });
+    },
+    [selectedInfo]
+  );
 
-
-  const setComments = useCallback((comments) => {
-    setSelectedInfo({
-      ...selectedInfo,
-      "data": {
-        ...selectedInfo.data,
-        commentS1: comments
-
-      },
-    });
-  }, [selectedInfo]);
-
-
-
-  const setWeight = useCallback((selectionData) => {
-
-    const kg = (parseFloat(selectionData) * parseFloat(selectedInfo.data.qtY1Def)).toFixed(2);
-    // eslint-disable-next-line no-new-wrappers
-    const num = new Number(kg).toLocaleString("el-GR");
-    setSelectedInfo({
-      ...selectedInfo,
-      "data": {
-        ...selectedInfo.data,
-        qtY1: num,
-        qtY2: selectionData
-      },
-    }
-    );
-  }, [selectedInfo]);
+  const setWeight = useCallback(
+    (selectionData) => {
+      const kg = (
+        parseFloat(selectionData) * parseFloat(selectedInfo.data.qtY1Def)
+      ).toFixed(2);
+      // eslint-disable-next-line no-new-wrappers
+      const num = new Number(kg).toLocaleString("el-GR");
+      setSelectedInfo({
+        ...selectedInfo,
+        data: {
+          ...selectedInfo.data,
+          qtY1: num,
+          qtY2: selectionData,
+        },
+      });
+    },
+    [selectedInfo]
+  );
 
   const resetSelection = useCallback(() => {
     setSelectedInfo(defaultValues);
   }, []);
 
-  const actions ={
+  const actions = {
     getSelection,
     resetSelection,
-  }
-
- 
-
+  };
 
   const classes = useStyles();
 
@@ -127,8 +127,15 @@ export const NewOrder = () => {
       data: { ...selectedInfo.data, search: val },
     });
   };
-
-
+  const handleSetOrderColor = (val) => {
+    setOrderColor(val);
+  };
+  const setColorValue = (val) => {
+    setSelectedInfo({
+      ...selectedInfo,
+      data: { ...selectedInfo.data, commentS1: val },
+    });
+  };
   const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΟΜΑΔΑ" },
     { id: "sku", numeric: false, label: "ΚΩΔΙΚΟΣ" },
@@ -141,7 +148,16 @@ export const NewOrder = () => {
 
   return (
     <NewOrderContext.Provider
-      value={{ selectedInfo,actions, handleSetSelectedValue,setWeight,setComments }}
+      value={{
+        selectedInfo,
+        actions,
+        orderColor,
+        handleSetSelectedValue,
+        setWeight,
+        setComments,
+        setOrderColor,
+        setColorValue,
+      }}
     >
       <Grid container spacing={3} justifyContent="center">
         <BackToMenu />
@@ -151,10 +167,7 @@ export const NewOrder = () => {
         <Grid item xs={12}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <OrderOptions
-                optionValue={defaultValues.data.fincode}
-                isDisabled={rows.length > 0}
-              />
+              <OrderOptions isDisabled={rows.length > 0} />
             </Grid>
           </Grid>
         </Grid>

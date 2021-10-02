@@ -17,7 +17,7 @@ export default function Asynchronous() {
 
   const handleChange = (e) => {
     const v = e.target.value;
-    if (v.length > 3) {
+    if (v.length > 2) {
       setLoading(true);
       setValue(v);
     }
@@ -42,8 +42,9 @@ export default function Asynchronous() {
     (async () => {
       if (value) {
         const data = {
+          company: 0,
           SearchValue: value,
-          BOption: color.v,
+          BOption: color,
           DFrom: null,
           DTo: null,
           TakeRecs: null,

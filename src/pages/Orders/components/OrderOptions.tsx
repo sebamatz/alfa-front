@@ -11,23 +11,20 @@ import {
 } from "@material-ui/core";
 import Radio, { RadioProps } from "@material-ui/core/Radio";
 
-import { PENDING, DATE_SEARCH } from "../../constants";
+import { PENDING, DATE_SEARCH } from "../../../constants";
 
 type Props = {
   optionValue: (value: string) => void;
 };
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    radios :{
+    radios: {
       textAlign: "left",
     },
   })
 );
 
-
-
-const GreenRadio = withStyles
-(({ palette }) => ({
+const GreenRadio = withStyles(({ palette }) => ({
   root: {
     color: palette.primary.main,
     "&$checked": {
@@ -37,7 +34,6 @@ const GreenRadio = withStyles
 
   checked: {},
 }))((props: RadioProps) => <Radio color="default" {...props} />);
-
 
 const OrderOptions = ({ optionValue }: Props) => {
   const classes = useStyles();

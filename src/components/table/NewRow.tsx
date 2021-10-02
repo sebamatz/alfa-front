@@ -21,9 +21,11 @@ interface Props {
 }
 
 export const NewRow = ({ saveOrder }: Props) => {
-  const { selectedInfo, setWeight,actions,setComments } =useContext(NewOrderContext);
+  const { selectedInfo, setWeight, actions, setComments } =
+    useContext(NewOrderContext);
 
-  const {mtrlname,qtY1,qtY2,xdocname,commentS1,search} = selectedInfo.data;
+  const { mtrlname, qtY1, qtY2, xdocname, comments, search } =
+    selectedInfo.data;
 
   const [groups, setGroups] = useState([]);
   const [group, setGroup] = useState(selectedInfo.data.fincode);
@@ -35,9 +37,9 @@ export const NewRow = ({ saveOrder }: Props) => {
     }
   };
 
-  const handleChangeComments=(e: any) => {
+  const handleChangeComments = (e: any) => {
     let val = e.target.value;
-      setComments(val);
+    setComments(val);
   };
 
   const handleSelectFincode = (e: any) => {
@@ -77,8 +79,7 @@ export const NewRow = ({ saveOrder }: Props) => {
         </FormControl>
       </TableCell>
       <TableCell>
-        <Autocomplete
-        />
+        <Autocomplete />
       </TableCell>
       <TableCell>
         <Input value={mtrlname} disabled title={mtrlname} />
@@ -103,7 +104,7 @@ export const NewRow = ({ saveOrder }: Props) => {
       <TableCell>
         <Input
           name="commentS1"
-          value={commentS1}
+          value={comments}
           onChange={handleChangeComments}
         />
       </TableCell>

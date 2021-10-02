@@ -6,7 +6,7 @@ import { HeadCell, Data } from "../../types";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { PENDING } from "../constants";
+import { PENDING } from "../../constants";
 import OrderOptions from "./components/OrderOptions";
 import DatePickers from "./components/DatePickers";
 import { Typography } from "@material-ui/core";

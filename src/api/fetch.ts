@@ -28,6 +28,58 @@ export const fechOrders = async (data) => {
 };
 
 export const fechGroups = async () => {
-  const result = await fetch("https://80.245.167.105:19580/erpapi/getgroups");
-  return await result.json();
+  const data = {
+    SearchValue: null,
+    company: 0,
+    BOption: null,
+    DFrom: null,
+    DTo: null,
+    TakeRecs: null,
+    Id: null,
+    LastId: null,
+    AFM: null,
+  };
+
+  const result = await getData(
+    "https://80.245.167.105:19580/erpapi/getgroups?pars=",
+    data
+  );
+  return await result;
+};
+
+//put order
+const defaults = [
+  {
+    company: 0,
+    boption: 0,
+    trdr: 3975,
+    trdbranch: 125,
+    comments: "string",
+    mtrl: 10069,
+    commentS1: "string",
+    qtY1: 45,
+    qtY2: 10,
+  },
+];
+//GET /erpapi/getbranches/obj
+
+export const getbranches = async (afm: string) => {
+  const data = {
+    company: 0,
+    afm: afm,
+    trdr: 0,
+    trdbranch: 0,
+    code: "string",
+    name: "string",
+    address: "string",
+    district: "string",
+    city: "string",
+    phonE1: "string",
+  };
+
+  const result = await getData(
+    "https://80.245.167.105:19580/erpapi/getbranches/obj?pars=",
+    data
+  );
+  return await result;
 };

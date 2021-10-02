@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   FormControl,
   RadioGroup,
@@ -13,11 +13,11 @@ import {
 import Radio, { RadioProps } from "@material-ui/core/Radio";
 import SearchIcon from "@material-ui/icons/Search";
 
-import { profilColors, DATE_SEARCH } from "../../constants";
+import { profilColors } from "../../../constants";
+import { NewOrderContext } from "../NewOrderContext";
 
 type Props = {
-  optionValue: (value: string | {}) => void;
-  isDisabled:boolean
+  isDisabled: boolean;
 };
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,23 +38,21 @@ const GreenRadio = withStyles(({ palette }) => ({
   checked: {},
 }))((props: RadioProps) => <Radio color="default" {...props} />);
 
-
-
-const OrderOptions = ({ optionValue,isDisabled }: Props) => {
+const OrderOptions = ({ isDisabled }: Props) => {
   const classes = useStyles();
-
-  const [value, setValue] = useState(profilColors.BLANK);
-  const [color, setColor] = useState("");
+  const { selectedInfo, setOrderColor, setColorValue, orderColor } =
+    useContext(NewOrderContext);
+  const { commentS1 } = selectedInfo.data;
 
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
     const v = (event.target as HTMLInputElement).value;
-    setValue(v);
-    optionValue({ v, color: v === "2" ? color : "" });
+    // setValue(v);
+    setOrderColor(v);
+    // v !== "2" && setColorValue("");
   };
   const handleChangeColor = (event: React.ChangeEvent<HTMLInputElement>) => {
     const c = (event.target as HTMLInputElement).value;
-    setColor(c);
-    optionValue(c);
+    setColorValue(c);
   };
   return (
     <FormControl component="fieldset">
@@ -62,7 +60,7 @@ const OrderOptions = ({ optionValue,isDisabled }: Props) => {
         aria-label="orders"
         row
         name="orders"
-        value={value}
+        value={orderColor}
         onChange={handleChangeType}
       >
         <Grid container spacing={3} alignItems="flex-end">
@@ -93,7 +91,7 @@ const OrderOptions = ({ optionValue,isDisabled }: Props) => {
             />
           </Grid>
 
-          {value === profilColors.COLOR && (
+          {orderColor === profilColors.COLOR && (
             <Grid item>
               <Grid container spacing={3} alignItems="flex-end">
                 <Grid item>
@@ -101,8 +99,8 @@ const OrderOptions = ({ optionValue,isDisabled }: Props) => {
                     id="input-with-icon-grid"
                     onChange={handleChangeColor}
                     label="Κωδικός..."
-              disabled={isDisabled}
-
+                    disabled={isDisabled}
+                    value={commentS1}
                   />
                 </Grid>
                 <Grid item>
