@@ -22,9 +22,9 @@ export default function Asynchronous() {
       setValue(v);
     }
   };
-  const { selectedInfo, handleSetSelectedValue, actions } =
+  const { selectedInfo, handleSetSelectedValue, actions, orderColor } =
     useContext(NewOrderContext);
-  const { fincode, color, search } = selectedInfo.data;
+  const { fincode, search } = selectedInfo.data;
   const { getSelection } = actions;
 
   const [open, setOpen] = useState(false);
@@ -42,9 +42,9 @@ export default function Asynchronous() {
     (async () => {
       if (value) {
         const data = {
-          company: 0,
+          Company: 0,
           SearchValue: value,
-          BOption: color,
+          BOption: orderColor,
           DFrom: null,
           DTo: null,
           TakeRecs: null,

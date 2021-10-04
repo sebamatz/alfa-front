@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard";
 import { Orders } from "./pages/Orders/Orders";
@@ -8,6 +8,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 import { getbranches, postData } from "./api/fetch";
 import CompanyOptions from "./components/CompanyOptions";
+import { BranchesContext } from "./context/BranchesContext";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,8 @@ const theme = createTheme({
 
 function App() {
   const [afm, setAfm] = useState(null);
+  const [branch, setBranch] = useState([]);
+  const [selectedBranch, setSelectBranch] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
@@ -35,37 +38,38 @@ function App() {
     const afmValue: any = document.getElementById("userAfm");
     if (afmValue) {
       setAfm(afmValue.value);
-      getbranches(afmValue.value);
+      getbranches(afmValue.value).then((data) => {
+        console.log("DDD", data);
+        setBranch(data);
+      });
     }
   }, [afm]);
 
-  useEffect(() => {
-    postData("https://80.245.167.105:19580/erpapi/putorder").then((data) => {
-      console.log(data); // JSON data parsed by `data.json()` call
-    });
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
-      <CompanyOptions />
-      <div className="App">
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Dashboard />
-            </Route>
-            <Route exact path="/erp-test">
-              <Dashboard />
-            </Route>
-            <Route path="/orders">
-              <Orders afm={afm} />
-            </Route>
-            <Route path="/new">
-              <NewOrder />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
+      <BranchesContext.Provider
+        value={{ branch, setBranch, selectedBranch, setSelectBranch }}
+      >
+        <CompanyOptions />
+        <div className="App">
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Dashboard />
+              </Route>
+              <Route exact path="/erp-test">
+                <Dashboard />
+              </Route>
+              <Route path="/orders">
+                <Orders afm={afm} />
+              </Route>
+              <Route path="/new">
+                <NewOrder />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      </BranchesContext.Provider>
     </ThemeProvider>
   );
 }

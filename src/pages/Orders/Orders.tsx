@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Orders = ({ afm }: any) => {
   const defaultData = {
-    company: 0,
+    Company: 0,
     SearchValue: null,
     BOption: 2,
     DFrom: null,

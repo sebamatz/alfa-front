@@ -30,7 +30,7 @@ export const fechOrders = async (data) => {
 export const fechGroups = async () => {
   const data = {
     SearchValue: null,
-    company: 0,
+    Company: 0,
     BOption: null,
     DFrom: null,
     DTo: null,
@@ -51,8 +51,8 @@ export const fechGroups = async () => {
 
 export const getbranches = async (afm: string) => {
   const data = {
-    company: 0,
-    afm: afm,
+    Company: 0,
+    AFM: afm,
     trdr: 0,
     trdbranch: 0,
     code: "string",
@@ -73,13 +73,35 @@ export const getbranches = async (afm: string) => {
 //put order
 const defaults = [
   {
-    company: 0,
+    Company: 0,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
-    comments: "string444dfdfd",
+    comments: "test1",
     mtrl: 10069,
-    commentS1: "string555666",
+    commentS1: "test1",
+    qtY1: 0,
+    qtY2: 0,
+  },
+  {
+    Company: 0,
+    bOption: 0,
+    trdr: 3975,
+    trdbranch: 125,
+    comments: "test2",
+    mtrl: 10069,
+    commentS1: "test2",
+    qtY1: 0,
+    qtY2: 0,
+  },
+  {
+    Company: 0,
+    bOption: 0,
+    trdr: 3975,
+    trdbranch: 125,
+    comments: "test3",
+    mtrl: 10069,
+    commentS1: "test13",
     qtY1: 0,
     qtY2: 0,
   },

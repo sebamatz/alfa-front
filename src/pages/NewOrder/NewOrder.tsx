@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import { NewOrderContext } from "./NewOrderContext";
 
 import DataTable from "../../components/table/Table";
@@ -7,7 +7,10 @@ import BackToMenu from "../../components/BackToMenu";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
+import { postData } from "../../api/fetch";
+import { BranchesContext } from "../../context/BranchesContext";
+import Branches from "./components/Branches";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +54,7 @@ export const NewOrder = () => {
 
   const [selectedInfo, setSelectedInfo] = useState(defaultValues);
   const getRows = useCallback((rows) => {
+    console.log("ROWS-ROWS", rows);
     setRows(rows);
   }, []);
 
@@ -81,6 +85,7 @@ export const NewOrder = () => {
         data: {
           ...selectedInfo.data,
           comments: comments,
+          commentS1: comments,
         },
       });
     },
@@ -127,9 +132,7 @@ export const NewOrder = () => {
       data: { ...selectedInfo.data, search: val },
     });
   };
-  const handleSetOrderColor = (val) => {
-    setOrderColor(val);
-  };
+
   const setColorValue = (val) => {
     setSelectedInfo({
       ...selectedInfo,
@@ -146,6 +149,37 @@ export const NewOrder = () => {
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
   ];
 
+  // post order
+
+  const { selectedBranch } = useContext(BranchesContext);
+  const handlePostData = () => {
+    // setup branches
+
+    const orderData: any = rows.map((orderItem) => {
+      return {
+        company: 0,
+        boption: orderColor,
+        trdr: selectedBranch[0].trdr,
+        trdbranch: selectedBranch[0].trdbranch,
+        comments: orderItem.comments,
+        mtrl: orderItem.sku,
+        commentS1: orderItem.commentS1,
+        qtY1: orderItem.qtY1,
+        qtY2: orderItem.qtY2,
+      };
+    });
+
+    console.log("orderData", orderData);
+    console.log("orderData", orderData);
+
+    postData("https://80.245.167.105:19580/erpapi/putorder", orderData).then(
+      (data) => {
+        console.log(data); // JSON data parsed by `data.json()` call
+      }
+    );
+  };
+
+  console.log("BRANCH", selectedBranch);
   return (
     <NewOrderContext.Provider
       value={{
@@ -181,6 +215,28 @@ export const NewOrder = () => {
             add
             getRows={getRows}
           />
+        </Grid>
+        <Grid item justifyContent="center">
+          <Grid container spacing={3} justifyContent="center">
+            {rows.length > 0 && (
+              <>
+                <Grid item xs={12} justifyContent="center">
+                  <Branches />
+                </Grid>
+                <Grid item xs={12} justifyContent="center">
+                  {selectedBranch.length > 0 && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handlePostData}
+                    >
+                      ΑΠΟΣΤΟΛΗ ΠΑΡΑΓΓΕΛΙΑΣ
+                    </Button>
+                  )}
+                </Grid>
+              </>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </NewOrderContext.Provider>
