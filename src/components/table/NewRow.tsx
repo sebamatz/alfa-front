@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const NewRow = ({ saveOrder }: Props) => {
-  const { selectedInfo, setWeight, actions, setComments } =
+  const { selectedInfo, setWeight, actions, setComments, setFinCode } =
     useContext(NewOrderContext);
 
   const { mtrlname, qtY1, qtY2, xdocname, comments, search } =
@@ -46,6 +46,7 @@ export const NewRow = ({ saveOrder }: Props) => {
     let val = e.target.value;
     actions.resetSelection();
     setGroup(val);
+    setFinCode(val);
   };
 
   const getGroups = useCallback(async () => {
@@ -54,6 +55,7 @@ export const NewRow = ({ saveOrder }: Props) => {
 
     //sets default value
     setGroup(groups[0].name);
+    setFinCode(groups[0].name);
   }, []);
 
   useEffect(() => {

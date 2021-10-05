@@ -67,9 +67,9 @@ const CompanyOptions = () => {
 
             <Grid item>
               <FormControlLabel
-                value={companies.ALUSET}
+                value={companies.ALOUSYSTEM}
                 control={<GreenRadio />}
-                label={companies.ALUSET}
+                label={companies.ALOUSYSTEM}
                 disabled
               />
             </Grid>

@@ -8,5 +8,5 @@ export const profilColors = {
 
 export const companies = {
   ALFA: "ALFA",
-  ALUSET: "ALUSET",
+  ALOUSYSTEM: "ALOUSYSTEM",
 };

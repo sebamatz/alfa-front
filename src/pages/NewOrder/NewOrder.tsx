@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect, useContext } from "react";
+import { useHistory } from "react-router-dom";
+
 import { NewOrderContext } from "./NewOrderContext";
 
 import DataTable from "../../components/table/Table";
@@ -49,6 +51,8 @@ const defaultValues: any = {
 };
 
 export const NewOrder = () => {
+  let history = useHistory();
+
   const [rows, setRows] = useState([]);
   const [orderColor, setOrderColor] = useState("0");
 
@@ -139,6 +143,13 @@ export const NewOrder = () => {
       data: { ...selectedInfo.data, commentS1: val },
     });
   };
+
+  const setFinCode = (val) => {
+    setSelectedInfo({
+      ...selectedInfo,
+      data: { ...selectedInfo.data, fincode: val },
+    });
+  };
   const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΟΜΑΔΑ" },
     { id: "sku", numeric: false, label: "ΚΩΔΙΚΟΣ" },
@@ -174,6 +185,10 @@ export const NewOrder = () => {
 
     postData("https://80.245.167.105:19580/erpapi/putorder", orderData).then(
       (data) => {
+        if (data.statusText === "OK") {
+          // history.push("./new");
+          window.location.reload();
+        }
         console.log(data); // JSON data parsed by `data.json()` call
       }
     );
@@ -191,6 +206,7 @@ export const NewOrder = () => {
         setComments,
         setOrderColor,
         setColorValue,
+        setFinCode,
       }}
     >
       <Grid container spacing={3} justifyContent="center">
