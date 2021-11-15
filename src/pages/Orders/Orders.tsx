@@ -41,7 +41,7 @@ export const Orders = ({ afm }: any) => {
   const defaultData = {
     Company: 0,
     SearchValue: null,
-    BOption: 2,
+    BOption: 3,
     DFrom: null,
     DTo: null,
     TakeRecs: null,

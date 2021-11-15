@@ -25,6 +25,7 @@ export default function Asynchronous() {
   const { selectedInfo, handleSetSelectedValue, actions, orderColor } =
     useContext(NewOrderContext);
   const { fincode, search } = selectedInfo.data;
+
   const { getSelection } = actions;
 
   const [open, setOpen] = useState(false);
@@ -114,7 +115,9 @@ export default function Asynchronous() {
           }
         }}
         getOptionSelected={(option, value) => option.code === value.code}
-        renderOption={(option) => option.name}
+        renderOption={(option) =>
+          `${option?.data?.sku || option.data.code} -- ${option.name}`
+        }
         options={options}
         loading={loading}
         value={search}

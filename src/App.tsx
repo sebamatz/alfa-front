@@ -50,7 +50,7 @@ function App() {
       <BranchesContext.Provider
         value={{ branch, setBranch, selectedBranch, setSelectBranch }}
       >
-        <CompanyOptions />
+        {/* <CompanyOptions /> */}
         <div className="App">
           <Router>
             <Switch>

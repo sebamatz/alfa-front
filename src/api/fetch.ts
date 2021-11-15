@@ -29,15 +29,7 @@ export const fechOrders = async (data) => {
 
 export const fechGroups = async () => {
   const data = {
-    SearchValue: null,
-    Company: 0,
-    BOption: null,
-    DFrom: null,
-    DTo: null,
-    TakeRecs: null,
-    Id: null,
-    LastId: null,
-    AFM: null,
+    Company: 1,
   };
 
   const result = await getData(
