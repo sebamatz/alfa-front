@@ -40,11 +40,12 @@ const GreenRadio = withStyles(({ palette }) => ({
 
 const OrderOptions = ({ isDisabled }: Props) => {
   const classes = useStyles();
-  const { selectedInfo, setOrderColor, setColorValue, orderColor } =
+  const { selectedInfo, setOrderColor, setColorValue, orderColor, actions } =
     useContext(NewOrderContext);
   const { commentS1 } = selectedInfo.data;
 
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
+    actions.resetSelection();
     const v = (event.target as HTMLInputElement).value;
     // setValue(v);
     setOrderColor(v);

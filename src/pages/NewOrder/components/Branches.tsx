@@ -16,7 +16,9 @@ export default function Branches({}: Props): ReactElement {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">ΚΑΤΑΣΤΗΜΑ</InputLabel>
+      <InputLabel className="branch" id="demo-simple-select-label">
+        ΚΑΤΑΣΤΗΜΑ
+      </InputLabel>
       {branch.length > 0 && (
         <Select
           onChange={handleSelectBranch}

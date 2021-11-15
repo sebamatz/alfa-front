@@ -1,16 +1,22 @@
-#root table, th, td {
+#root table,
+th,
+td {
   border: none;
 }
 
-.App{
-  padding:15px
+.App {
+  padding: 15px;
 }
 
 #root *[class*="MuiInputBase-input"] {
-    height: auto;
+  height: auto;
   border-color: transparent;
 }
 
 #root *[class*="MuiTableCell-root"] img {
   height: 80px;
+}
+
+.MuiInputLabel-formControl.branch {
+  position: relative;
 }

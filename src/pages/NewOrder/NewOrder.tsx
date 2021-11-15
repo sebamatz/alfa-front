@@ -181,9 +181,6 @@ export const NewOrder = () => {
       };
     });
 
-    console.log("orderData", orderData);
-    console.log("orderData", orderData);
-
     postData("https://80.245.167.105:19580/erpapi/putorder", orderData).then(
       (data) => {
         if (data.statusText === "OK") {
@@ -194,8 +191,6 @@ export const NewOrder = () => {
       }
     );
   };
-
-  console.log("BRANCH", selectedBranch);
   return (
     <NewOrderContext.Provider
       value={{
