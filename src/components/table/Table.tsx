@@ -209,6 +209,10 @@ export default function DataTable(props: TableProps) {
                           data = moment(row[r]).format("DD/MM/YY");
                         }
 
+                        if (r === "qtY1") {
+                          data = data.toLocaleString("el-GR");
+                        }
+
                         if (r === "xdocname") {
                           const imagefile = row[r];
                           const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imagefile}`;

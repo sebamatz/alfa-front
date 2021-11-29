@@ -166,6 +166,11 @@ export const NewOrder = () => {
   const { selectedBranch } = useContext(BranchesContext);
   const handlePostData = () => {
     // setup branches
+    const convettedNumber = (num) => num.replace(/,/g, ".");
+    //   // eslint-disable-next-line no-new-wrappers
+    //   const number = new Number(num).toLocaleString("en-US");
+    //   return number;
+    // };
 
     const orderData: any = rows.map((orderItem) => {
       return {
@@ -176,7 +181,7 @@ export const NewOrder = () => {
         comments: orderItem.comments,
         mtrl: orderItem.mtrl,
         commentS1: orderItem.commentS1,
-        qtY1: orderItem.qtY1,
+        qtY1: convettedNumber(orderItem.qtY1),
         qtY2: orderItem.qtY2,
       };
     });
@@ -185,6 +190,7 @@ export const NewOrder = () => {
       (data) => {
         if (data.statusText === "OK") {
           // history.push("./new");
+          alert("Επιτυχής αποστολή");
           window.location.reload();
         }
         console.log(data); // JSON data parsed by `data.json()` call

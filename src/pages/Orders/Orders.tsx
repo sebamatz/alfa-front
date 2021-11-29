@@ -99,6 +99,7 @@ export const Orders = ({ afm }: any) => {
 
   const getOrders = async (data) => {
     const orders: any = await fechOrders(data);
+    console.log("orders", orders);
     setOrders(orders);
   };
 

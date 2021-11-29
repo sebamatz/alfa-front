@@ -67,6 +67,8 @@ export const NewRow = ({ saveOrder }: Props) => {
     actions.resetSelection();
   };
 
+  const Qty1 = qtY1.toLocaleString("el-GR");
+
   return (
     <TableRow>
       <TableCell>
@@ -90,7 +92,7 @@ export const NewRow = ({ saveOrder }: Props) => {
         <Input type="number" name="qtY2" value={qtY2} onChange={handleChange} />
       </TableCell>
       <TableCell>
-        <Input name="qtY1" value={qtY1} disabled />
+        <Input name="qtY1" value={Qty1} disabled />
       </TableCell>
       <TableCell>
         {xdocname ? (
