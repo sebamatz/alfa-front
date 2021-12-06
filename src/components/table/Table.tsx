@@ -245,7 +245,7 @@ export default function DataTable(props: TableProps) {
                 })}
               {addRow && <NewRow saveOrder={handleSaveOrder} />}
               {add && (
-                <div style={{ marginTop: "20px" }}>
+                <div style={{ margin: "20px 0" }}>
                   <Button
                     variant="contained"
                     color="primary"
