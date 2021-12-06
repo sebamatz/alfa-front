@@ -54,7 +54,7 @@ export const NewOrder = () => {
   let history = useHistory();
 
   const [rows, setRows] = useState([]);
-  const [orderColor, setOrderColor] = useState("0");
+  const [orderColor, setOrderColor] = useState("1");
 
   const [selectedInfo, setSelectedInfo] = useState(defaultValues);
   const getRows = useCallback((rows) => {
@@ -159,6 +159,7 @@ export const NewOrder = () => {
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
+    { id: "action", numeric: false, label: "" },
   ];
 
   // post order
@@ -232,6 +233,7 @@ export const NewOrder = () => {
             rows={[]}
             add
             getRows={getRows}
+            pagination={false}
           />
         </Grid>
         <Grid item justifyContent="center">
@@ -242,6 +244,7 @@ export const NewOrder = () => {
                   <Branches />
                 </Grid>
                 <Grid item xs={12} justifyContent="center">
+                  {console.log("selectedBranch", selectedBranch)}
                   {selectedBranch.length > 0 && (
                     <Button
                       variant="contained"

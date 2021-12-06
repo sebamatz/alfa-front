@@ -5,6 +5,7 @@ const groupBy = (keys: any) => (array: any) =>
       ...obj,
       generatedKey: value,
     });
+
     return objectsByKeyValue;
   }, {});
 
@@ -43,16 +44,8 @@ export const fechGroups = async () => {
 
 export const getbranches = async (afm: string) => {
   const data = {
-    Company: 0,
+    Company: 1,
     AFM: afm,
-    trdr: 0,
-    trdbranch: 0,
-    code: "string",
-    name: "string",
-    address: "string",
-    district: "string",
-    city: "string",
-    phonE1: "string",
   };
 
   const result = await getData(
@@ -65,7 +58,7 @@ export const getbranches = async (afm: string) => {
 //put order
 const defaults = [
   {
-    Company: 0,
+    Company: 1,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -76,7 +69,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: 0,
+    Company: 1,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -87,7 +80,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: 0,
+    Company: 1,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,

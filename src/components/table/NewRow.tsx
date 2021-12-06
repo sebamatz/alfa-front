@@ -6,6 +6,7 @@ import {
   IconButton,
   FormControl,
   MenuItem,
+  TextField,
 } from "@material-ui/core";
 import ImageIcon from "@material-ui/icons/Image";
 import Select from "@material-ui/core/Select";
@@ -32,9 +33,7 @@ export const NewRow = ({ saveOrder }: Props) => {
 
   const handleChange = (e: any) => {
     let val = e.target.value;
-    if (val > 0) {
-      setWeight(val);
-    }
+    setWeight(val);
   };
 
   const handleChangeComments = (e: any) => {
@@ -89,7 +88,13 @@ export const NewRow = ({ saveOrder }: Props) => {
         <Input value={mtrlname} disabled title={mtrlname} />
       </TableCell>
       <TableCell>
-        <Input type="number" name="qtY2" value={qtY2} onChange={handleChange} />
+        <TextField
+          id="number"
+          name="qtY2"
+          value={qtY2}
+          onChange={handleChange}
+          type="number"
+        />
       </TableCell>
       <TableCell>
         <Input name="qtY1" value={Qty1} disabled />

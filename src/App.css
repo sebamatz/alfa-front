@@ -20,3 +20,7 @@ td {
 .MuiInputLabel-formControl.branch {
   position: relative;
 }
+
+.MuiTableRow-root.Mui-selected {
+  background-color: #83bd00;
+}

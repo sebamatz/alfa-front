@@ -16,6 +16,7 @@ import { NewRow } from "./NewRow";
 import { HeadCell, Data } from "../../types";
 import { AnyTxtRecord } from "dns";
 import { Button } from "@material-ui/core";
+import { SignalCellularConnectedNoInternet0BarTwoTone } from "@material-ui/icons";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     table: {
-      minWidth: 750,
+      // minWidth: 750,
       border: "none",
     },
     visuallyHidden: {
@@ -88,6 +89,9 @@ type TableProps = {
   add?: boolean;
   orderCol?: any;
   getRows?: (data: any) => void;
+  pagination?: boolean;
+  stickyHeader?: boolean;
+  selectedRow?: any;
 };
 
 export default function DataTable(props: TableProps) {
@@ -100,13 +104,16 @@ export default function DataTable(props: TableProps) {
     maxCols = 100,
     add = false,
     orderCol = "",
+    pagination = true,
+    stickyHeader,
     getRows,
+    selectedRow = null,
   } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(orderCol);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [tableRows, setRow] = useState(rows);
   const [addRow, setAddwRow] = useState(false);
@@ -168,16 +175,8 @@ export default function DataTable(props: TableProps) {
     <div className={classes.root}>
       <form>
         <TableContainer>
-          {add && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddRowClick}
-            >
-              {addRow ? "ΑΚΥΡΩΣΗ Χ" : "ΠΡΟΣΘΗΚΗ +"}
-            </Button>
-          )}
           <Table
+            stickyHeader={stickyHeader}
             className={classes.table}
             aria-labelledby="tableTitle"
             size={"medium"}
@@ -194,13 +193,15 @@ export default function DataTable(props: TableProps) {
             <TableBody>
               {stableSort(tableRows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: Data, index) => {
+                .map((row: any, index) => {
+                  console.log("row", row);
                   return (
                     <TableRow
                       hover
                       onClick={(event) => handleRowClick(event, row)}
                       tabIndex={-1}
                       key={index}
+                      selected={row.fincode === selectedRow?.fincode}
                     >
                       {Object.keys(row).map((r: string, i: number) => {
                         let data: any = row[r as keyof typeof row];
@@ -243,23 +244,36 @@ export default function DataTable(props: TableProps) {
                   );
                 })}
               {addRow && <NewRow saveOrder={handleSaveOrder} />}
-              {emptyRows > 0 && (
+              {add && (
+                <div style={{ marginTop: "20px" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddRowClick}
+                  >
+                    {addRow ? "ΑΚΥΡΩΣΗ" : "+"}
+                  </Button>
+                </div>
+              )}
+              {/* {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {pagination && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </form>
     </div>
   );

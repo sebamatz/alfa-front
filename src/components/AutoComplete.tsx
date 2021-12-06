@@ -43,7 +43,7 @@ export default function Asynchronous() {
     (async () => {
       if (value) {
         const data = {
-          Company: 0,
+          Company: 1,
           SearchValue: value,
           BOption: orderColor,
           DFrom: null,

@@ -27,6 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "auto",
       marginTop: theme.spacing(4),
     },
+    table_wrapper: {
+      padding: theme.spacing(2),
+      border: "1px solid #e0e0e0",
+      borderRadius: "5px",
+    },
     title: {
       padding: theme.spacing(2),
       textAlign: "center",
@@ -39,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Orders = ({ afm }: any) => {
   const defaultData = {
-    Company: 0,
+    Company: 1,
     SearchValue: null,
     BOption: 3,
     DFrom: null,
@@ -82,7 +87,8 @@ export const Orders = ({ afm }: any) => {
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
-    { id: "status", numeric: true, label: "STATUS" },
+    { id: "status", numeric: false, label: "STATUS" },
+    // { id: "download", numeric: false, label: "DOWNLOAD" },
   ];
 
   const headCellsDetails: any = [
@@ -105,10 +111,10 @@ export const Orders = ({ afm }: any) => {
 
   useEffect(() => {
     if (afm) {
-      getOrders({ ...query, afm: afm });
+      getOrders({ ...query, AFM: afm });
     }
   }, [afm, query]);
-
+  console.log("orderDetails", orderDetails);
   return (
     <Grid container spacing={3} justifyContent="center">
       <BackToMenu />
@@ -133,13 +139,17 @@ export const Orders = ({ afm }: any) => {
         </Grid>
       </Grid>
       <Grid item lg={6} sm={12} className={classes.table}>
-        <DataTable
-          name="master"
-          onRowclick={getDetails}
-          rows={orders && master}
-          headCells={headCells}
-          maxCols={3}
-        />
+        <div className={classes.table_wrapper}>
+          <DataTable
+            name="master"
+            onRowclick={getDetails}
+            rows={orders && master}
+            headCells={headCells}
+            maxCols={3}
+            selectedRow={orderDetails[0]}
+            // pagination={false}
+          />
+        </div>
       </Grid>
       <Grid item xs={6} />
       <Grid item lg={12} sm={12} className={classes.table}>
