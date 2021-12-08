@@ -167,13 +167,14 @@ export const NewOrder = () => {
   const { selectedBranch } = useContext(BranchesContext);
   const handlePostData = () => {
     // setup branches
-    const convettedNumber = (num) => num.replace(/,/g, ".");
+    const convettedNumber = (num) => num.toString().replace(/,/g, ".");
     //   // eslint-disable-next-line no-new-wrappers
     //   const number = new Number(num).toLocaleString("en-US");
     //   return number;
     // };
 
     const orderData: any = rows.map((orderItem) => {
+      console.log("orderItem", orderItem);
       return {
         company: 0,
         boption: orderColor,
@@ -234,6 +235,7 @@ export const NewOrder = () => {
             add
             getRows={getRows}
             pagination={false}
+            rowsPerPagenum={100}
           />
         </Grid>
         <Grid item justifyContent="center">

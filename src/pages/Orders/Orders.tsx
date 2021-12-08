@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 import DataTable from "../../components/table/Table";
-import { HeadCell, Data } from "../../types";
+import { HeadCell } from "../../types";
 
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -87,7 +85,7 @@ export const Orders = ({ afm }: any) => {
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
-    { id: "status", numeric: false, label: "STATUS" },
+    // { id: "status", numeric: false, label: "STATUS" },
     // { id: "download", numeric: false, label: "DOWNLOAD" },
   ];
 

@@ -92,6 +92,7 @@ type TableProps = {
   pagination?: boolean;
   stickyHeader?: boolean;
   selectedRow?: any;
+  rowsPerPagenum?: number;
 };
 
 export default function DataTable(props: TableProps) {
@@ -108,12 +109,13 @@ export default function DataTable(props: TableProps) {
     stickyHeader,
     getRows,
     selectedRow = null,
+    rowsPerPagenum = 10,
   } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>(orderCol);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(rowsPerPagenum);
 
   const [tableRows, setRow] = useState(rows);
   const [addRow, setAddwRow] = useState(false);

@@ -21,6 +21,6 @@ td {
   position: relative;
 }
 
-.MuiTableRow-root.Mui-selected {
+#root .MuiTableRow-root.Mui-selected {
   background-color: #83bd00;
 }
