@@ -1,3 +1,5 @@
+import FileSaver, { saveAs } from "file-saver";
+
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -9,10 +11,13 @@ const groupBy = (keys: any) => (array: any) =>
     return objectsByKeyValue;
   }, {});
 
-export async function getData(url = "", params: any = {}, short = false) {
+const constructApi = (url, params) => {
   const queryString = encodeURIComponent(JSON.stringify(params));
-  const structUrl = url + queryString;
-  const response = await fetch(structUrl);
+  return url + queryString;
+};
+
+export async function getData(url = "", params: any = {}, short = false) {
+  const response = await fetch(constructApi(url, params));
   const data = await response.json(); // parses JSON response into native JavaScript objects
   const groupFincodeStatus = groupBy(["trndate", "fincode", "status"]);
   return short ? groupFincodeStatus(data) : data;
@@ -102,7 +107,33 @@ export async function postData(url = "", data = defaults) {
     },
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
-  return response; // parses JSON response into native JavaScript objects
+
+  return { response, data: await response.json() }; // parses JSON response into native JavaScript objects
 }
 
 // /erpapi/putorder
+//https://80.245.167.105:19580/erpapi/getorders/pdf?pars=%7B%22Company%22%3A1%2C%22Id%22%3A%22179631%22%7D//
+
+export async function downloadPdf(payload: any) {
+  try {
+    const url = `https://80.245.167.105:19580/erpapi/getorders/pdf?pars=`;
+
+    const response = await fetch(
+      constructApi(url, { Company: 1, id: payload }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const pdf = await response.json();
+    const linkSource = `data:application/pdf;base64,${pdf}`;
+    const downloadLink = document.createElement("a");
+    const fileName = `${payload}.pdf`;
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.code || err.message);
+  }
+}

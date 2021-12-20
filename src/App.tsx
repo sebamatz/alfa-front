@@ -41,6 +41,9 @@ function App() {
       getbranches(afmValue.value).then((data) => {
         console.log("DDD", data);
         setBranch(data);
+        if (data.length === 1) {
+          setSelectBranch(data);
+        }
       });
     }
   }, [afm]);

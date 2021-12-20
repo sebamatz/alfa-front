@@ -9,7 +9,7 @@ import OrderOptions from "./components/OrderOptions";
 import DatePickers from "./components/DatePickers";
 import { Typography } from "@material-ui/core";
 import BackToMenu from "../../components/BackToMenu";
-import { fechOrders } from "../../api/fetch";
+import { fechOrders, downloadPdf } from "../../api/fetch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,14 +85,14 @@ export const Orders = ({ afm }: any) => {
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
-    // { id: "status", numeric: false, label: "STATUS" },
-    // { id: "download", numeric: false, label: "DOWNLOAD" },
+    { id: "status", numeric: false, label: "STATUS" },
+    { id: "download", numeric: false, label: "ΕΚΤΥΠΩΣΗ" },
   ];
 
   const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
-    { id: "status", numeric: false, label: "STATUS" },
+    { id: "status", numeric: false, label: "ΣΤΑΔΙΟ ΕΠΕΞΕΡΓΑΣΙΑΣ" },
     { id: "sku", numeric: false, label: "ΚΩΔΙΚΟΣ" },
     { id: "mtrlname", numeric: false, label: "ΠΕΡΙΓΡΑΦΗ" },
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
@@ -113,6 +113,8 @@ export const Orders = ({ afm }: any) => {
     }
   }, [afm, query]);
   console.log("orderDetails", orderDetails);
+  console.log("orderDetails", orderDetails);
+
   return (
     <Grid container spacing={3} justifyContent="center">
       <BackToMenu />
@@ -145,6 +147,7 @@ export const Orders = ({ afm }: any) => {
             headCells={headCells}
             maxCols={3}
             selectedRow={orderDetails[0]}
+            getPdf={downloadPdf}
             // pagination={false}
           />
         </div>

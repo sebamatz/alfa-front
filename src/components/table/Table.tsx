@@ -9,6 +9,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import TableRow from "@material-ui/core/TableRow";
 import ImageIcon from "@material-ui/icons/Image";
 import moment from "moment";
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 
 import EnhancedTableHead from "./Head";
 import { NewRow } from "./NewRow";
@@ -93,6 +94,7 @@ type TableProps = {
   stickyHeader?: boolean;
   selectedRow?: any;
   rowsPerPagenum?: number;
+  getPdf?: (data: any) => void;
 };
 
 export default function DataTable(props: TableProps) {
@@ -110,6 +112,7 @@ export default function DataTable(props: TableProps) {
     getRows,
     selectedRow = null,
     rowsPerPagenum = 10,
+    getPdf,
   } = props;
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
@@ -209,7 +212,8 @@ export default function DataTable(props: TableProps) {
                         let data: any = row[r as keyof typeof row];
 
                         if (r === "trndate") {
-                          data = moment(row[r]).format("DD/MM/YY");
+                          console.log("trndate", row[r]);
+                          data = row[r];
                         }
 
                         if (r === "qtY1") {
@@ -234,6 +238,15 @@ export default function DataTable(props: TableProps) {
                           )
                         );
                       })}
+                      {/* {name === "master" && (
+                        <TableCell>
+                          <Button onClick={() => getPdf(row["findoc"])}>
+                            <PictureAsPdfIcon
+                              style={{ color: "red", fontSize: "40px" }}
+                            />
+                          </Button>
+                        </TableCell>
+                      )} */}
                       {clearCell && (
                         <TableCell key={`${index}-cancel`}>
                           <CancelIcon

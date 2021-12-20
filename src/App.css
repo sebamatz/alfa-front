@@ -6,6 +6,7 @@ td {
 
 .App {
   padding: 15px;
+  min-height: 69vh;
 }
 
 #root *[class*="MuiInputBase-input"] {

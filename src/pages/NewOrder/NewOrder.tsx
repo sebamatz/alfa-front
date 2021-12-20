@@ -9,10 +9,11 @@ import BackToMenu from "../../components/BackToMenu";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
-import { Button, Typography } from "@material-ui/core";
-import { postData } from "../../api/fetch";
+import { Button, TextField, Typography } from "@material-ui/core";
+import { postData, downloadPdf } from "../../api/fetch";
 import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
+import OrderDialog from "./Dialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,6 +62,14 @@ export const NewOrder = () => {
     console.log("ROWS-ROWS", rows);
     setRows(rows);
   }, []);
+
+  const [remarkValue, setRemarkValue] = useState("");
+  const [isopen, setDialog] = useState(false);
+  const [finDoc, setFindoc] = useState(null);
+
+  const handleChangeRemark = (event) => {
+    setRemarkValue(event.target.value);
+  };
 
   const getSelection = useCallback(
     (selectionData) => {
@@ -162,9 +171,13 @@ export const NewOrder = () => {
     { id: "action", numeric: false, label: "" },
   ];
 
+  const handleDownload = () => {
+    downloadPdf(finDoc);
+  };
+
   // post order
 
-  const { selectedBranch } = useContext(BranchesContext);
+  const { selectedBranch, branch } = useContext(BranchesContext);
   const handlePostData = () => {
     // setup branches
     const convettedNumber = (num) => num.toString().replace(/,/g, ".");
@@ -185,15 +198,15 @@ export const NewOrder = () => {
         commentS1: orderItem.commentS1,
         qtY1: convettedNumber(orderItem.qtY1),
         qtY2: orderItem.qtY2,
+        remarks: remarkValue,
       };
     });
 
     postData("https://80.245.167.105:19580/erpapi/putorder", orderData).then(
-      (data) => {
-        if (data.statusText === "OK") {
-          // history.push("./new");
-          alert("Επιτυχής αποστολή");
-          window.location.reload();
+      (data: any) => {
+        if (data.response.statusText === "OK") {
+          setDialog(true);
+          setFindoc(data.data.findoc);
         }
         console.log(data); // JSON data parsed by `data.json()` call
       }
@@ -238,23 +251,47 @@ export const NewOrder = () => {
             rowsPerPagenum={100}
           />
         </Grid>
+        <Grid container justifyContent="center">
+          <Grid item>
+            <TextField
+              variant="outlined"
+              id="outlined-multiline-flexible"
+              label="ΠΑΡΑΤΗΡΗΣΕΙΣ"
+              multiline
+              maxRows={4}
+              value={remarkValue}
+              onChange={handleChangeRemark}
+              style={{ width: 350 }}
+            />
+          </Grid>
+        </Grid>
         <Grid item justifyContent="center">
           <Grid container spacing={3} justifyContent="center">
             {rows.length > 0 && (
               <>
                 <Grid item xs={12} justifyContent="center">
-                  <Branches />
+                  <div style={{ textAlign: "center" }}>
+                    {branch.length > 1 ? (
+                      <Branches />
+                    ) : selectedBranch[0] ? (
+                      selectedBranch[0].name
+                    ) : (
+                      "ΔΕΝ ΒΡΕΘΗΚΕ ΠΕΛΑΤΗΣ"
+                    )}
+                  </div>
                 </Grid>
                 <Grid item xs={12} justifyContent="center">
-                  {console.log("selectedBranch", selectedBranch)}
+                  {console.log("selectedBranch", branch)}
                   {selectedBranch.length > 0 && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handlePostData}
-                    >
-                      ΑΠΟΣΤΟΛΗ ΠΑΡΑΓΓΕΛΙΑΣ
-                    </Button>
+                    <div style={{ textAlign: "center" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handlePostData}
+                      >
+                        ΑΠΟΣΤΟΛΗ ΠΑΡΑΓΓΕΛΙΑΣ
+                      </Button>
+                    </div>
                   )}
                 </Grid>
               </>
@@ -262,6 +299,12 @@ export const NewOrder = () => {
           </Grid>
         </Grid>
       </Grid>
+      <OrderDialog
+        open={isopen}
+        finDoc={finDoc}
+        onClose={() => setDialog(!isopen)}
+        getPdf={handleDownload}
+      />
     </NewOrderContext.Provider>
   );
 };
