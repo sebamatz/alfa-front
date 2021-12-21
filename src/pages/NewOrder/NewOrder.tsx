@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const defaultValues: any = {
   data: {
     search: null,
-    fincode: "Πρόφιλ",
+    fincode: "1",
     sku: "",
     mtrlname: "",
     qtY2: "",
@@ -99,7 +99,6 @@ export const NewOrder = () => {
         data: {
           ...selectedInfo.data,
           comments: comments,
-          commentS1: comments,
         },
       });
     },
@@ -189,7 +188,7 @@ export const NewOrder = () => {
     const orderData: any = rows.map((orderItem) => {
       console.log("orderItem", orderItem);
       return {
-        company: 0,
+        company: 1,
         boption: orderColor,
         trdr: selectedBranch[0].trdr,
         trdbranch: selectedBranch[0].trdbranch,
@@ -206,7 +205,8 @@ export const NewOrder = () => {
       (data: any) => {
         if (data.response.statusText === "OK") {
           setDialog(true);
-          setFindoc(data.data.findoc);
+          console.log("data", data.data);
+          setFindoc(data.data.fincode);
         }
         console.log(data); // JSON data parsed by `data.json()` call
       }

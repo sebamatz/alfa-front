@@ -212,8 +212,7 @@ export default function DataTable(props: TableProps) {
                         let data: any = row[r as keyof typeof row];
 
                         if (r === "trndate") {
-                          console.log("trndate", row[r]);
-                          data = row[r];
+                          data = moment(row[r]).format("DD/MM/YY");
                         }
 
                         if (r === "qtY1") {
@@ -238,15 +237,15 @@ export default function DataTable(props: TableProps) {
                           )
                         );
                       })}
-                      {/* {name === "master" && (
+                      {name === "master" && (
                         <TableCell>
-                          <Button onClick={() => getPdf(row["findoc"])}>
+                          <Button onClick={() => getPdf(row["fincode"])}>
                             <PictureAsPdfIcon
                               style={{ color: "red", fontSize: "40px" }}
                             />
                           </Button>
                         </TableCell>
-                      )} */}
+                      )}
                       {clearCell && (
                         <TableCell key={`${index}-cancel`}>
                           <CancelIcon

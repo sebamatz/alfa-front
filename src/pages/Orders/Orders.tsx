@@ -85,7 +85,7 @@ export const Orders = ({ afm }: any) => {
   const headCells: HeadCell[] = [
     { id: "fincode", numeric: false, label: "ΠΑΡΑΓΓΕΛΙΑ" },
     { id: "trndate", numeric: false, label: "ΗΜ/ΝΙΑ" },
-    { id: "status", numeric: false, label: "STATUS" },
+    // { id: "status", numeric: false, label: "STATUS" },
     { id: "download", numeric: false, label: "ΕΚΤΥΠΩΣΗ" },
   ];
 
@@ -145,7 +145,7 @@ export const Orders = ({ afm }: any) => {
             onRowclick={getDetails}
             rows={orders && master}
             headCells={headCells}
-            maxCols={3}
+            // maxCols={5}
             selectedRow={orderDetails[0]}
             getPdf={downloadPdf}
             // pagination={false}

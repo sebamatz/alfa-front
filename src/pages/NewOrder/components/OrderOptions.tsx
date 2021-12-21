@@ -39,8 +39,14 @@ const GreenRadio = withStyles(({ palette }) => ({
 }))((props: RadioProps) => <Radio color="default" {...props} />);
 
 const OrderOptions = ({ isDisabled }: Props) => {
-  const { selectedInfo, setOrderColor, setColorValue, orderColor, actions } =
-    useContext(NewOrderContext);
+  const {
+    selectedInfo,
+    setOrderColor,
+    setColorValue,
+    orderColor,
+    actions,
+    setFinCode,
+  } = useContext(NewOrderContext);
   const { commentS1 } = selectedInfo.data;
 
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +54,7 @@ const OrderOptions = ({ isDisabled }: Props) => {
     const v = (event.target as HTMLInputElement).value;
     // setValue(v);
     setOrderColor(v);
+    setFinCode(selectedInfo.data.fincode);
     // v !== "2" && setColorValue("");
   };
   const handleChangeColor = (event: React.ChangeEvent<HTMLInputElement>) => {
