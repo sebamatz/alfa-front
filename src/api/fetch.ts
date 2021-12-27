@@ -1,5 +1,4 @@
-import FileSaver, { saveAs } from "file-saver";
-
+import {domain} from '../config'
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -26,7 +25,7 @@ export async function getData(url = "", params: any = {}, short = false) {
 // returs client orders
 export const fechOrders = async (data) => {
   const result = await getData(
-    "https://80.245.167.105:19580/erpapi/getorders/obj?pars=",
+    `${domain}/erpapi/getorders/obj?pars=`,
     data,
     true
   );
@@ -39,7 +38,7 @@ export const fechGroups = async () => {
   };
 
   const result = await getData(
-    "https://80.245.167.105:19580/erpapi/getgroups?pars=",
+  `${domain}/erpapi/getgroups?pars=`,
     data
   );
   return await result;
@@ -54,7 +53,7 @@ export const getbranches = async (afm: string) => {
   };
 
   const result = await getData(
-    "https://80.245.167.105:19580/erpapi/getbranches/obj?pars=",
+    `${domain}/erpapi/getbranches/obj?pars=`,
     data
   );
   console.log("getbranches", result);
@@ -112,20 +111,17 @@ export async function postData(url = "", data = defaults) {
 }
 
 // /erpapi/putorder
-//https://80.245.167.105:19580/erpapi/getorders/pdf?pars=%7B%22Company%22%3A1%2C%22Id%22%3A%22179631%22%7D//
+//${domain}/erpapi/getorders/pdf?pars=%7B%22Company%22%3A1%2C%22Id%22%3A%22179631%22%7D//
 
-export async function downloadPdf(payload: any) {
+export async function downloadPdf(payload: any, code) {
   try {
-    const url = `https://80.245.167.105:19580/erpapi/getorders/pdf?pars=`;
+    const url = `${domain}/erpapi/getorders/pdf?pars=`;
 
-    const response = await fetch(
-      constructApi(url, { Company: 1, id: payload }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(constructApi(url, { Company: 1, id: code }), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const pdf = await response.json();
     const linkSource = `data:application/pdf;base64,${pdf}`;
     const downloadLink = document.createElement("a");

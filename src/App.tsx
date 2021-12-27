@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard";
 import { Orders } from "./pages/Orders/Orders";
@@ -6,8 +6,7 @@ import { NewOrder } from "./pages/NewOrder/NewOrder";
 import "./App.css";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
-import { getbranches, postData } from "./api/fetch";
-import CompanyOptions from "./components/CompanyOptions";
+import { getbranches } from "./api/fetch";
 import { BranchesContext } from "./context/BranchesContext";
 
 const theme = createTheme({
@@ -38,10 +37,10 @@ function App() {
     const afmValue: any = document.getElementById("userAfm");
     if (afmValue) {
       setAfm(afmValue.value);
-      getbranches(afmValue.value).then((data) => {
+      getbranches(afmValue.value).then((data: any) => {
         console.log("DDD", data);
         setBranch(data);
-        if (data.length === 1) {
+        if (data?.length === 1) {
           setSelectBranch(data);
         }
       });

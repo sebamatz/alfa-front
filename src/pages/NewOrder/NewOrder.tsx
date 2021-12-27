@@ -14,6 +14,7 @@ import { postData, downloadPdf } from "../../api/fetch";
 import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
 import OrderDialog from "./Dialog";
+import { domain } from "../../config";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,6 +67,7 @@ export const NewOrder = () => {
   const [remarkValue, setRemarkValue] = useState("");
   const [isopen, setDialog] = useState(false);
   const [finDoc, setFindoc] = useState(null);
+  const [pdfCode, setPdfCode] = useState(null);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
@@ -171,7 +173,7 @@ export const NewOrder = () => {
   ];
 
   const handleDownload = () => {
-    downloadPdf(finDoc);
+    downloadPdf(pdfCode, finDoc);
   };
 
   // post order
@@ -201,16 +203,15 @@ export const NewOrder = () => {
       };
     });
 
-    postData("https://80.245.167.105:19580/erpapi/putorder", orderData).then(
-      (data: any) => {
-        if (data.response.statusText === "OK") {
-          setDialog(true);
-          console.log("data", data.data);
-          setFindoc(data.data.fincode);
-        }
-        console.log(data); // JSON data parsed by `data.json()` call
+    postData(`${domain}/erpapi/putorder`, orderData).then((data: any) => {
+      if (data.response.statusText === "OK") {
+        setDialog(true);
+        console.log("data", data.data);
+        setFindoc(data.data.findoc);
+        setPdfCode(data.data.fincode);
       }
-    );
+      console.log(data); // JSON data parsed by `data.json()` call
+    });
   };
   return (
     <NewOrderContext.Provider
@@ -301,7 +302,7 @@ export const NewOrder = () => {
       </Grid>
       <OrderDialog
         open={isopen}
-        finDoc={finDoc}
+        finDoc={pdfCode}
         onClose={() => setDialog(!isopen)}
         getPdf={handleDownload}
       />

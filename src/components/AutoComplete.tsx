@@ -1,4 +1,5 @@
 // *https://www.registers.service.gov.uk/registers/country/use-the-api*
+import { domain } from "../config";
 import { Fragment, useContext, useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -54,13 +55,13 @@ export default function Asynchronous() {
           AFM: fincode,
         };
 
-        const response = await getData(
-          "https://80.245.167.105:19580/erpapi/getitems/obj?pars=",
+        const response: any = await getData(
+          `${domain}/erpapi/getitems/obj?pars=`,
           data
         );
         //await sleep(1e3); // For demo purposes.
 
-        const list = response.map((item: any) => {
+        const list: any = response.map((item: any) => {
           return { name: item.name, value: item.code, data: item };
         });
 

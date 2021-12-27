@@ -49,7 +49,7 @@ export const NewRow = ({ saveOrder }: Props) => {
   };
 
   const getGroups = useCallback(async () => {
-    const groups = await fechGroups();
+    const groups: any = await fechGroups();
     setGroups(groups);
 
     //sets default value

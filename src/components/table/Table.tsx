@@ -94,7 +94,7 @@ type TableProps = {
   stickyHeader?: boolean;
   selectedRow?: any;
   rowsPerPagenum?: number;
-  getPdf?: (data: any) => void;
+  getPdf?: any;
 };
 
 export default function DataTable(props: TableProps) {
@@ -238,8 +238,12 @@ export default function DataTable(props: TableProps) {
                         );
                       })}
                       {name === "master" && (
-                        <TableCell>
-                          <Button onClick={() => getPdf(row["fincode"])}>
+                        <TableCell style={{ padding: "0px" }}>
+                          <Button
+                            onClick={() =>
+                              getPdf(row["fincode"], row["findoc"])
+                            }
+                          >
                             <PictureAsPdfIcon
                               style={{ color: "red", fontSize: "40px" }}
                             />
