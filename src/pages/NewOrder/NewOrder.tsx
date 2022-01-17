@@ -168,7 +168,7 @@ export const NewOrder = () => {
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
-    { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
+    { id: "comments", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
     { id: "action", numeric: false, label: "" },
   ];
 
