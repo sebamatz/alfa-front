@@ -133,10 +133,12 @@ export const Orders = ({ afm }: any) => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={3} justifyContent="center">
+          <Grid item>{branch.length > 1 && <Branches />}</Grid>
+        </Grid>
+        <Grid container spacing={3} justifyContent="center">
           <Grid item>
             <OrderOptions optionValue={optionValue} />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             {value !== PENDING && (
               <DatePickers
@@ -145,9 +147,6 @@ export const Orders = ({ afm }: any) => {
                 getDateTo={setDateTo}
               />
             )}
-          </Grid>
-          <Grid item xs={12} sm={4} lg={4}>
-            {branch.length > 1 && <Branches />}
           </Grid>
         </Grid>
       </Grid>
