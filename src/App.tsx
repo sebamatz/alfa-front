@@ -29,7 +29,7 @@ const theme = createTheme({
 function App() {
   const [afm, setAfm] = useState(null);
   const [branch, setBranch] = useState([]);
-  const [selectedBranch, setSelectBranch] = useState([]);
+  const [selectedBranch, setSelectBranch] = useState({});
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
@@ -38,10 +38,9 @@ function App() {
     if (afmValue) {
       setAfm(afmValue.value);
       getbranches(afmValue.value).then((data: any) => {
-        console.log("DDD", data);
         setBranch(data);
         if (data?.length === 1) {
-          setSelectBranch(data);
+          setSelectBranch(data[0]);
         }
       });
     }

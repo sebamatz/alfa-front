@@ -54,6 +54,8 @@ const defaultValues: any = {
 
 export const NewOrder = () => {
   let history = useHistory();
+  const { selectedBranch, branch, setSelectBranch } =
+    useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
   const [orderColor, setOrderColor] = useState("1");
@@ -68,10 +70,15 @@ export const NewOrder = () => {
   const [isopen, setDialog] = useState(false);
   const [finDoc, setFindoc] = useState(null);
   const [pdfCode, setPdfCode] = useState(null);
+  const [colorValue, SetColorValue] = useState(null);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
   };
+
+  useEffect(() => {
+    if (branch.length > 1) setSelectBranch({});
+  }, []);
 
   const getSelection = useCallback(
     (selectionData) => {
@@ -95,12 +102,12 @@ export const NewOrder = () => {
   );
 
   const setComments = useCallback(
-    (comments) => {
+    (commentS1) => {
       setSelectedInfo({
         ...selectedInfo,
         data: {
           ...selectedInfo.data,
-          comments: comments,
+          commentS1: commentS1,
         },
       });
     },
@@ -149,10 +156,7 @@ export const NewOrder = () => {
   };
 
   const setColorValue = (val) => {
-    setSelectedInfo({
-      ...selectedInfo,
-      data: { ...selectedInfo.data, commentS1: val },
-    });
+    SetColorValue(val);
   };
 
   const setFinCode = (val) => {
@@ -168,7 +172,7 @@ export const NewOrder = () => {
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
-    { id: "comments", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
+    { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
     { id: "action", numeric: false, label: "" },
   ];
 
@@ -178,7 +182,6 @@ export const NewOrder = () => {
 
   // post order
 
-  const { selectedBranch, branch } = useContext(BranchesContext);
   const handlePostData = () => {
     // setup branches
     const convettedNumber = (num) => num.toString().replace(/,/g, ".");
@@ -188,13 +191,12 @@ export const NewOrder = () => {
     // };
 
     const orderData: any = rows.map((orderItem) => {
-      console.log("orderItem", orderItem);
       return {
         company: 1,
         boption: orderColor,
-        trdr: selectedBranch[0].trdr,
-        trdbranch: selectedBranch[0].trdbranch,
-        comments: orderItem.comments,
+        trdr: selectedBranch.trdr,
+        trdbranch: selectedBranch.trdbranch,
+        comments: colorValue,
         mtrl: orderItem.mtrl,
         commentS1: orderItem.commentS1,
         qtY1: convettedNumber(orderItem.qtY1),
@@ -206,7 +208,6 @@ export const NewOrder = () => {
     postData(`${domain}/erpapi/putorder`, orderData).then((data: any) => {
       if (data.response.statusText === "OK") {
         setDialog(true);
-        console.log("data", data.data);
         setFindoc(data.data.findoc);
         setPdfCode(data.data.fincode);
       }
@@ -219,6 +220,7 @@ export const NewOrder = () => {
         selectedInfo,
         actions,
         orderColor,
+        colorValue,
         handleSetSelectedValue,
         setWeight,
         setComments,
@@ -274,8 +276,8 @@ export const NewOrder = () => {
                   <div style={{ textAlign: "center" }}>
                     {branch.length > 1 ? (
                       <Branches />
-                    ) : selectedBranch[0] ? (
-                      selectedBranch[0].name
+                    ) : selectedBranch?.name ? (
+                      selectedBranch.name
                     ) : (
                       "ΔΕΝ ΒΡΕΘΗΚΕ ΠΕΛΑΤΗΣ"
                     )}
@@ -283,7 +285,7 @@ export const NewOrder = () => {
                 </Grid>
                 <Grid item xs={12} justifyContent="center">
                   {console.log("selectedBranch", branch)}
-                  {selectedBranch.length > 0 && (
+                  {selectedBranch && (
                     <div style={{ textAlign: "center" }}>
                       <Button
                         variant="contained"

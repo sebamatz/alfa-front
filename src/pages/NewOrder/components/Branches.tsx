@@ -10,13 +10,9 @@ export default function Branches({}: Props): ReactElement {
 
   const handleSelectBranch = (e: any) => {
     let val = e.target.value;
-    const selected = branch.filter((data) => data.code === val);
+    const selected = branch.find((data) => data.code === val);
     setSelectBranch(selected);
   };
-
-  // useEffect(() => {
-  //   return branch.length === 1 && setSelectBranch(branch[0]);
-  // }, [branch, setSelectBranch]);
 
   return (
     <FormControl fullWidth>
@@ -27,7 +23,7 @@ export default function Branches({}: Props): ReactElement {
         <Select
           onChange={handleSelectBranch}
           name="fincode"
-          value={selectedBranch.address}
+          value={selectedBranch.code}
         >
           {branch.map((v: any, i) => (
             <MenuItem value={v.code}>{v.address}</MenuItem>

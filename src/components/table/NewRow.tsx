@@ -25,7 +25,7 @@ export const NewRow = ({ saveOrder }: Props) => {
   const { selectedInfo, setWeight, actions, setComments, setFinCode } =
     useContext(NewOrderContext);
 
-  const { mtrlname, qtY1, qtY2, xdocname, comments, search } =
+  const { mtrlname, qtY1, qtY2, xdocname, commentS1, search } =
     selectedInfo.data;
 
   const [groups, setGroups] = useState([]);
@@ -113,7 +113,7 @@ export const NewRow = ({ saveOrder }: Props) => {
       <TableCell>
         <Input
           name="commentS1"
-          value={comments}
+          value={commentS1}
           onChange={handleChangeComments}
         />
       </TableCell>

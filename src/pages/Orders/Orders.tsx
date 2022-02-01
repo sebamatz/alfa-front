@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import DataTable from "../../components/table/Table";
 import { HeadCell } from "../../types";
 
@@ -7,6 +7,10 @@ import Grid from "@material-ui/core/Grid";
 import { PENDING } from "../../constants";
 import OrderOptions from "./components/OrderOptions";
 import DatePickers from "./components/DatePickers";
+import Branches from "../NewOrder/components/Branches";
+
+import { BranchesContext } from "../../context/BranchesContext";
+
 import { Typography } from "@material-ui/core";
 import BackToMenu from "../../components/BackToMenu";
 import { fechOrders, downloadPdf } from "../../api/fetch";
@@ -53,6 +57,7 @@ export const Orders = ({ afm }: any) => {
     AFM: afm,
   };
 
+  const { selectedBranch, branch } = useContext(BranchesContext);
   const classes = useStyles();
   const [value, setValue] = useState(PENDING);
   const [orderDetails, setDetails] = useState([]);
@@ -103,17 +108,21 @@ export const Orders = ({ afm }: any) => {
 
   const getOrders = async (data) => {
     const orders: any = await fechOrders(data);
-    console.log("orders", orders);
     setOrders(orders);
   };
 
   useEffect(() => {
-    if (afm) {
+    if (afm && branch.length === 1) {
       getOrders({ ...query, AFM: afm });
     }
-  }, [afm, query]);
-  console.log("orderDetails", orderDetails);
-  console.log("orderDetails", orderDetails);
+    if (selectedBranch.trdbranch) {
+      getOrders({
+        ...query,
+        AFM: afm,
+        TrdrBranch: selectedBranch.trdbranch,
+      });
+    }
+  }, [afm, query, selectedBranch, branch]);
 
   return (
     <Grid container spacing={3} justifyContent="center">
@@ -124,9 +133,10 @@ export const Orders = ({ afm }: any) => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={6}>
+          <Grid item>
             <OrderOptions optionValue={optionValue} />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             {value !== PENDING && (
               <DatePickers
@@ -135,6 +145,9 @@ export const Orders = ({ afm }: any) => {
                 getDateTo={setDateTo}
               />
             )}
+          </Grid>
+          <Grid item xs={12} sm={4} lg={4}>
+            {branch.length > 1 && <Branches />}
           </Grid>
         </Grid>
       </Grid>

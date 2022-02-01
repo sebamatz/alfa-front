@@ -46,8 +46,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
     orderColor,
     actions,
     setFinCode,
+    colorValue,
   } = useContext(NewOrderContext);
-  const { commentS1 } = selectedInfo.data;
+  const { comments } = selectedInfo.data;
 
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
     actions.resetSelection();
@@ -107,7 +108,7 @@ const OrderOptions = ({ isDisabled }: Props) => {
                     onChange={handleChangeColor}
                     label="Κωδικός..."
                     disabled={isDisabled}
-                    value={commentS1}
+                    value={colorValue}
                   />
                 </Grid>
                 <Grid item>

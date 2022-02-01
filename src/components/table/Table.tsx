@@ -199,7 +199,6 @@ export default function DataTable(props: TableProps) {
               {stableSort(tableRows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
-                  console.log("row", row);
                   return (
                     <TableRow
                       hover
