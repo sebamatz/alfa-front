@@ -111,7 +111,7 @@ export default function DataTable(props: TableProps) {
     stickyHeader,
     getRows,
     selectedRow = null,
-    rowsPerPagenum = 10,
+    rowsPerPagenum = 25,
     getPdf,
   } = props;
   const classes = useStyles();

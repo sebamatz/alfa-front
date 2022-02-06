@@ -84,7 +84,7 @@ export const Orders = ({ afm }: any) => {
   const getSearchData = (data) => {
     const { text, from, to } = data;
     // post with data
-    setQuery({ ...query, SearchValue: text, DFrom: from, DTo: to });
+    setQuery({ ...query, SearchValue: text, DFrom: dateFrom, DTo: dateto });
   };
 
   const headCells: HeadCell[] = [
@@ -103,7 +103,8 @@ export const Orders = ({ afm }: any) => {
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
-    { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
+    { id: "mtcommentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
+    // { id: "mtcomments", numeric: false, label: "ΚΩΔΙΚΟΣ" },
   ];
 
   const getOrders = async (data) => {
@@ -169,6 +170,8 @@ export const Orders = ({ afm }: any) => {
         <Grid item xs={12}>
           <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
         </Grid>
+        <span>{orderDetails[0].mtcomments}Comments</span>
+        <span>{orderDetails[0].remarks}Remarks</span>
         <DataTable
           name="details"
           onRowclick={getDetails}

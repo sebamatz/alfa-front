@@ -1,4 +1,4 @@
-import {domain} from '../config'
+import { domain } from "../config";
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -18,7 +18,12 @@ const constructApi = (url, params) => {
 export async function getData(url = "", params: any = {}, short = false) {
   const response = await fetch(constructApi(url, params));
   const data = await response.json(); // parses JSON response into native JavaScript objects
-  const groupFincodeStatus = groupBy(["trndate", "fincode", "status"]);
+  const groupFincodeStatus = groupBy([
+    "trndate",
+    "fincode",
+    "status",
+    "comments",
+  ]);
   return short ? groupFincodeStatus(data) : data;
 }
 
@@ -37,10 +42,7 @@ export const fechGroups = async () => {
     Company: 1,
   };
 
-  const result = await getData(
-  `${domain}/erpapi/getgroups?pars=`,
-    data
-  );
+  const result = await getData(`${domain}/erpapi/getgroups?pars=`, data);
   return await result;
 };
 
@@ -52,10 +54,7 @@ export const getbranches = async (afm: string) => {
     AFM: afm,
   };
 
-  const result = await getData(
-    `${domain}/erpapi/getbranches/obj?pars=`,
-    data
-  );
+  const result = await getData(`${domain}/erpapi/getbranches/obj?pars=`, data);
   console.log("getbranches", result);
   return result;
 };

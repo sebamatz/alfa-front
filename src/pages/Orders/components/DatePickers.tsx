@@ -16,8 +16,7 @@ import moment from "moment";
 type Props = {
   getDateFrom: (date: Date | null) => void;
   getDateTo: (date: Date | null) => void;
-  getSearchData: (data:{}) => void;
-
+  getSearchData: (data: {}) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const DatePickers = ({ getDateFrom, getDateTo ,getSearchData}: Props) => {
+const DatePickers = ({ getDateFrom, getDateTo, getSearchData }: Props) => {
   const classes = useStyles();
 
   const [text, setText] = useState("");
@@ -92,24 +91,24 @@ const DatePickers = ({ getDateFrom, getDateTo ,getSearchData}: Props) => {
   };
 
   const handleSearch = () => {
-
-    const from = moment(selectedDateFrom).format("YYYYMMDD")
-    const to = moment(selectedDateTo).format("YYYYMMDD")
-
+    const from = moment(selectedDateFrom).format("YYYYMMDD");
+    const to = moment(selectedDateTo).format("YYYYMMDD");
 
     const search = { from, to, text };
-    getSearchData(search)
+    getSearchData(search);
   };
+
+  const dateFormat = "dd-MM-yyyy";
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container spacing={3} justifyContent="flex-start">
-        <Grid container >
+        <Grid container>
           <Grid item xs={6} className={classes.date}>
             <DatePicker
               autoOk
               disableToolbar
-              format="dd/MM/yyyy"
+              format={dateFormat}
               margin="normal"
               id="Form"
               label="ΑΠΟ"
@@ -124,7 +123,7 @@ const DatePickers = ({ getDateFrom, getDateTo ,getSearchData}: Props) => {
               margin="normal"
               id="date-picker-dialog"
               label="ΕΩΣ"
-              format="dd/MM/yyyy"
+              format={dateFormat}
               value={selectedDateTo}
               onChange={handleDateChangeTo}
             />
