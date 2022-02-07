@@ -170,8 +170,16 @@ export const Orders = ({ afm }: any) => {
         <Grid item xs={12}>
           <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
         </Grid>
-        <span>{orderDetails[0].mtcomments}Comments</span>
-        <span>{orderDetails[0].remarks}Remarks</span>
+        {orderDetails[0]?.mtcomments && (
+          <span>
+            Αιτιολογία: {orderDetails[0].mtcomments}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        )}
+
+        {orderDetails[0]?.remarks && (
+          <span>Παρατηρήσεις: {orderDetails[0].remarks}</span>
+        )}
         <DataTable
           name="details"
           onRowclick={getDetails}
