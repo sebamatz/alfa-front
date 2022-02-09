@@ -195,7 +195,8 @@ export const NewOrder = () => {
         company: 1,
         boption: orderColor,
         trdr: selectedBranch.trdr,
-        trdbranch: selectedBranch.trdbranch,
+        trdbranch:
+          selectedBranch.trdbranch === 0 ? null : selectedBranch.trdbranch,
         comments: colorValue,
         mtrl: orderItem.mtrl,
         commentS1: orderItem.commentS1,
@@ -274,13 +275,7 @@ export const NewOrder = () => {
               <>
                 <Grid item xs={12} justifyContent="center">
                   <div style={{ textAlign: "center" }}>
-                    {branch.length > 1 ? (
-                      <Branches />
-                    ) : selectedBranch?.name ? (
-                      selectedBranch.name
-                    ) : (
-                      "ΔΕΝ ΒΡΕΘΗΚΕ ΠΕΛΑΤΗΣ"
-                    )}
+                    {branch.length > 1 && <Branches />}
                   </div>
                 </Grid>
                 <Grid item xs={12} justifyContent="center">

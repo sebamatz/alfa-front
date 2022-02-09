@@ -170,9 +170,9 @@ export const Orders = ({ afm }: any) => {
         <Grid item xs={12}>
           <Typography className={classes.title}>ΑΝΑΛΥΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
         </Grid>
-        {orderDetails[0]?.mtcomments && (
+        {orderDetails[0]?.ficomments && (
           <span>
-            Αιτιολογία: {orderDetails[0].mtcomments}
+            Αιτιολογία: {orderDetails[0].ficomments}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </span>
         )}

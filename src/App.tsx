@@ -34,14 +34,15 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    console.log("here");
     const afmValue: any = document.getElementById("userAfm");
     if (afmValue) {
-      setAfm(afmValue.value);
       getbranches(afmValue.value).then((data: any) => {
         setBranch(data);
         if (data?.length === 1) {
           setSelectBranch(data[0]);
         }
+        setAfm(afmValue.value);
       });
     }
   }, [afm]);
