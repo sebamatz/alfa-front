@@ -121,11 +121,14 @@ export const NewOrder = () => {
       ).toFixed(2);
       // eslint-disable-next-line no-new-wrappers
       const num = new Number(kg).toLocaleString("el-GR");
+      const convertedNum = new Number(kg).toLocaleString("en-GB");
+
       setSelectedInfo({
         ...selectedInfo,
         data: {
           ...selectedInfo.data,
           qtY1: num,
+          qt1converted: convertedNum,
           qtY2: selectionData,
         },
       });
@@ -184,7 +187,14 @@ export const NewOrder = () => {
 
   const handlePostData = () => {
     // setup branches
-    const convettedNumber = (num) => num.toString().replace(/,/g, ".");
+    const convettedNumber = (num: any) => {
+      const tonum = parseFloat(num);
+      // eslint-disable-next-line no-new-wrappers
+      const nummm = new Number(tonum).toLocaleString("en-GB");
+      debugger;
+      return nummm;
+    };
+
     //   // eslint-disable-next-line no-new-wrappers
     //   const number = new Number(num).toLocaleString("en-US");
     //   return number;
@@ -200,7 +210,7 @@ export const NewOrder = () => {
         comments: colorValue,
         mtrl: orderItem.mtrl,
         commentS1: orderItem.commentS1,
-        qtY1: convettedNumber(orderItem.qtY1),
+        qtY1: orderItem.qt1converted,
         qtY2: orderItem.qtY2,
         remarks: remarkValue,
       };
