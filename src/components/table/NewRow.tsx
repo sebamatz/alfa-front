@@ -68,6 +68,12 @@ export const NewRow = ({ saveOrder }: Props) => {
 
   const Qty1 = qtY1.toLocaleString("el-GR");
 
+  useEffect(() => {
+    if (qtY2 === "1") {
+      setWeight(qtY2);
+    }
+  }, [qtY2]);
+
   return (
     <TableRow>
       <TableCell>

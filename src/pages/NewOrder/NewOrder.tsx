@@ -92,7 +92,7 @@ export const NewOrder = () => {
           mtrlname: selectionData.name,
           mtrl: selectionData.mtrl,
           qtY1: selectionData.mU21,
-          qtY2: 1,
+          qtY2: "1",
           xdocname: selectionData.xdocname,
           qtY1Def: selectionData.mU21,
         },
@@ -120,9 +120,9 @@ export const NewOrder = () => {
         parseFloat(selectionData) * parseFloat(selectedInfo.data.qtY1Def)
       ).toFixed(2);
       // eslint-disable-next-line no-new-wrappers
-      const num = new Number(kg).toLocaleString("el-GR");
-      const convertedNum = new Number(kg).toLocaleString("en-GB");
-
+      const newNum = new Number(kg);
+      const num = newNum.toLocaleString("el-GR");
+      const convertedNum = newNum.toLocaleString("en-GB");
       setSelectedInfo({
         ...selectedInfo,
         data: {
@@ -186,15 +186,6 @@ export const NewOrder = () => {
   // post order
 
   const handlePostData = () => {
-    // setup branches
-    const convettedNumber = (num: any) => {
-      const tonum = parseFloat(num);
-      // eslint-disable-next-line no-new-wrappers
-      const nummm = new Number(tonum).toLocaleString("en-GB");
-      debugger;
-      return nummm;
-    };
-
     //   // eslint-disable-next-line no-new-wrappers
     //   const number = new Number(num).toLocaleString("en-US");
     //   return number;
