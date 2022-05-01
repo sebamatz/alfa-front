@@ -25,3 +25,7 @@ td {
 #root .MuiTableRow-root.Mui-selected {
   background-color: #83bd00;
 }
+
+.status {
+  height: 90px !important;
+}

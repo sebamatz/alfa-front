@@ -320,9 +320,9 @@ export default function DataTable(props: TableProps) {
       </form>
       {status && name === "details" && (
         <img
+          className="status"
           alt="xdocname"
           src={`https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${status}`}
-          height="90"
         />
       )}
     </div>
