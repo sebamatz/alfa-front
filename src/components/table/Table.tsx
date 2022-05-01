@@ -122,6 +122,9 @@ export default function DataTable(props: TableProps) {
 
   const [tableRows, setRow] = useState(rows);
   const [addRow, setAddwRow] = useState(false);
+  // const [status, setStatus] = useState(null);
+
+  let status = null;
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -207,18 +210,18 @@ export default function DataTable(props: TableProps) {
                       key={index}
                       selected={row.fincode === selectedRow?.fincode}
                     >
-                      {Object.keys(row).map((r: string, i: number) => {
-                        let data: any = row[r as keyof typeof row];
+                      {headCells.map((r: any, i: number) => {
+                        let data: any = row[r.id];
 
-                        if (r === "trndate") {
+                        if (r.id === "trndate") {
                           data = moment(row[r]).format("DD/MM/YY");
                         }
 
-                        if (r === "qtY1") {
+                        if (r.id === "qtY1") {
                           data = data.toLocaleString("el-GR");
                         }
 
-                        if (r === "xdocname") {
+                        if (r.id === "xdocname") {
                           const imagefile = row[r];
                           const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imagefile}`;
 
@@ -229,12 +232,35 @@ export default function DataTable(props: TableProps) {
                           );
                         }
 
-                        return (
-                          i < maxCols &&
-                          headCells.some((e: any) => e.id === r) && (
-                            <TableCell key={i}>{data}</TableCell>
-                          )
-                        );
+                        if (r.id === "status") {
+                          let imageFile;
+
+                          if (
+                            data === "ΚΑΤΑΧΩΡΗΜΕΝΗ" ||
+                            data === "ΕΚΤΥΠΩΜΕΝΗ" ||
+                            data === "ΕΚΤΕΛΕΣΗ ΠΑΡΑΓΓΕΛΙΑΣ"
+                          ) {
+                            imageFile = "AVAFO_LEYKO.jpg";
+                            status = imageFile;
+                          }
+                          if (
+                            data === "ΠΡΟΣ ΒΑΦΕΙΟ" ||
+                            data === "ΕΞΟΔΟΣ ΒΑΦΕΙΟΥ"
+                          ) {
+                            imageFile = "XRWMA.jpg";
+                            status = imageFile;
+                          }
+                        }
+                        //   const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imageFile}`;
+
+                        //   data = imageFile ? (
+                        //     <img alt="xdocname" src={path} height="90" />
+                        //   ) : (
+                        //     <ImageIcon />
+                        //   );
+                        // }
+
+                        return <TableCell key={i}>{data}</TableCell>;
                       })}
                       {name === "master" && (
                         <TableCell style={{ padding: "0px" }}>
@@ -292,6 +318,13 @@ export default function DataTable(props: TableProps) {
           />
         )}
       </form>
+      {status && name === "details" && (
+        <img
+          alt="xdocname"
+          src={`https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${status}`}
+          height="90"
+        />
+      )}
     </div>
   );
 }

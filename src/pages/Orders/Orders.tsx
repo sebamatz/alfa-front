@@ -74,6 +74,7 @@ export const Orders = ({ afm }: any) => {
   const optionValue = (value: string) => {
     value === PENDING && setQuery(defaultData);
     setValue(value);
+    setDetails([]);
   };
 
   const getDetails = (data: any) => {
@@ -102,9 +103,11 @@ export const Orders = ({ afm }: any) => {
     { id: "mtrlname", numeric: false, label: "ΠΕΡΙΓΡΑΦΗ" },
     { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
     { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
+    { id: "qtY2COV", numeric: true, label: "ΒΕΡΓΕΣ ΕΚΤΕΛΕΣΜΕΝΕΣ" },
+    { id: "qtY2REM", numeric: true, label: "ΒΕΡΓΕΣ ΑΝΕΚΤΕΛΕΣΤΕΣ" },
+    // { id: "mtcomments", numeric: false, label: "ΚΩΔΙΚΟΣ" },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
     { id: "mtcommentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
-    // { id: "mtcomments", numeric: false, label: "ΚΩΔΙΚΟΣ" },
   ];
 
   const getOrders = async (data) => {
@@ -180,6 +183,7 @@ export const Orders = ({ afm }: any) => {
         {orderDetails[0]?.remarks && (
           <span>Παρατηρήσεις: {orderDetails[0].remarks}</span>
         )}
+
         <DataTable
           name="details"
           onRowclick={getDetails}
