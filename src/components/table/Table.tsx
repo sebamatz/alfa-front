@@ -215,8 +215,6 @@ export default function DataTable(props: TableProps) {
 
                         if (r.id === "trndate") {
                           data = moment(row[r.id]).format("DD/MM/YY");
-                          console.log("trndate", row[r.id]);
-                          console.log("r.id", r.id);
                         }
 
                         if (r.id === "qtY1") {
@@ -235,32 +233,12 @@ export default function DataTable(props: TableProps) {
                         }
 
                         if (r.id === "status") {
-                          let imageFile;
-
-                          if (
-                            data === "ΚΑΤΑΧΩΡΗΜΕΝΗ" ||
-                            data === "ΕΚΤΥΠΩΜΕΝΗ" ||
-                            data === "ΕΚΤΕΛΕΣΗ ΠΑΡΑΓΓΕΛΙΑΣ"
-                          ) {
-                            imageFile = "AVAFO_LEYKO.jpg";
-                            status = imageFile;
-                          }
-                          if (
-                            data === "ΠΡΟΣ ΒΑΦΕΙΟ" ||
-                            data === "ΕΞΟΔΟΣ ΒΑΦΕΙΟΥ"
-                          ) {
-                            imageFile = "XRWMA.jpg";
-                            status = imageFile;
-                          }
+                          console.log(row["series"]);
+                          status =
+                            row["series"] === 9021
+                              ? "AVAFO_LEYKO.jpg"
+                              : "XRWMA.jpg";
                         }
-                        //   const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imageFile}`;
-
-                        //   data = imageFile ? (
-                        //     <img alt="xdocname" src={path} height="90" />
-                        //   ) : (
-                        //     <ImageIcon />
-                        //   );
-                        // }
 
                         return <TableCell key={i}>{data}</TableCell>;
                       })}
