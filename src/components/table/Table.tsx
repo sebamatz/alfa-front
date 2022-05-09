@@ -214,7 +214,9 @@ export default function DataTable(props: TableProps) {
                         let data: any = row[r.id];
 
                         if (r.id === "trndate") {
-                          data = moment(row[r]).format("DD/MM/YY");
+                          data = moment(row[r.id]).format("DD/MM/YY");
+                          console.log("trndate", row[r.id]);
+                          console.log("r.id", r.id);
                         }
 
                         if (r.id === "qtY1") {
@@ -222,7 +224,7 @@ export default function DataTable(props: TableProps) {
                         }
 
                         if (r.id === "xdocname") {
-                          const imagefile = row[r];
+                          const imagefile = row[r.id];
                           const path = `https://alfa-press.gr/wp-content/themes/porto-child/erp/icons/${imagefile}`;
 
                           data = imagefile ? (
