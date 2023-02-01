@@ -62,6 +62,12 @@ export const NewRow = ({ saveOrder }: Props) => {
   }, [getGroups]);
 
   const handleSave = () => {
+    console.log("selectedInfo", selectedInfo.data);
+    if (selectedInfo.data.qtY2 < 1) {
+      return alert(
+        "Δεν έχει συμπληρωθεί το πεδίο – βέργες έλαχιστη ποσότητα 1"
+      );
+    }
     saveOrder(selectedInfo.data);
     actions.resetSelection();
   };
