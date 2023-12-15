@@ -1,1 +1,3 @@
-export const domain = "https://www.alfaeorders.com:19580";
+const ulr: any = document.getElementById("apiUrl");
+
+export const domain = ulr.value;
