@@ -132,3 +132,54 @@ export async function downloadPdf(payload: any, code) {
     throw new Error(err?.response?.data?.code || err.message);
   }
 }
+
+//curl -X GET --header 'Accept: application/json' 'https://alfaeorders.com:19580/erpapi/getitems/obj?pars=%7BCompany%3A%201%2C%20SearchValue%3A%20%222500%22%2C%20BOption%3A%201%2C%20AFM%3A%22%CE%A3%CE%A5%CE%A3%CE%A4%CE%97%CE%9C%CE%91%CE%A4%CE%91%20ALFA%22%7D'
+
+// - Returns a list of Items matching the given BOption,AFM(as ΟΜΑΔΑ),SearchValue ---
+// Required fields (Company:, BOption:, AFM:"")
+// Here is a sample {Company: 1, SearchValue: "22500", BOption: 1, AFM:"ΣΥΣΤΗΜΑΤΑ ALFA"}.
+// BOption: 1 = Άβαφο(Default), 2 = Λευκό, 3 = Χρώμα
+// AFM(as ΟΜΑΔΑ(πχ Προφίλ, Γωνιά κλπ)
+// SearchValue: > 4 ψηφίων...
+// (Post params) and get Items to fill DropDownList ΚΩΔΙΚΟΣ
+// Other sample for POUDRES
+// BOption: 30 -> Get with {BOption: 30, Company: 1, AFM:""} Return {"ID": f.MTRMANFCTR, "Code": f.MANFCTRCODE}
+// get list of MTRMANFCTR (WHERE ITEM.MTRGROUP = 11009 GROUPBY ITEM.MTRMANFCTR)
+// BOption: 40 -> Get with {BOption: 40, Company: 1, AFM:""} Return {"ID": f.UTBL04, "NAME": f.f.U4NAME}
+// get list of UTBL04 (WHERE ITEM.MTRGROUP = 11009 GROUPBY mx.UTBL04)
+// BOption: 50 -> Get with {BOption: 50, Company: 1, SearchValue: "tes*", id: 16, LastId:1, AFM:""} id = MTRMANFCTR(ID), LastId = mx.UTBL04 result from previous get -- Return {"ccCPOUDRAID": f.MTRL, "SKU": f.SKU}
+// get list of POUDRES ITEEXTRA.VARCHAR05 WHERE ITEM.MTRGROUP = 11009 AND ITEM.MTRMANFCTR
+// BOption: 60 -> Get with {BOption: 60, Company: 1, AFM:""} Return {"CCCBAFEIOID": f.TRDR, "NAME": f.NAME}
+// ΠΡΟΜΗΘΕΥΤΕΣ (ΕΞΩΤΕΡΙΚΑ ΒΑΦΕΙΑ) : επιλέξτε TRDR,NAME WHERE SUPPLIER.TRDPGROUP = 1
+// Fields "ccCPOUDRAID": , "CCCBAFEIOID": must return for each line with post put /erpapi/putorder
+
+export interface IGetItems {
+  Company: number;
+  BOption: number;
+  AFM?: string | null;
+  SearchValue?: string;
+  id?: any;
+  LastId?: any;
+  trdr?: any;
+  trdbranch?: any;
+  comments?: any;
+  mtrl?: any;
+  commentS1?: any;
+  qtY1?: any;
+  qtY2?: any;
+}
+
+export const getItems = async (payload: IGetItems) => {
+  const { Company, BOption, AFM, SearchValue = "  " } = payload;
+  const params = {
+    Company,
+    BOption,
+    AFM,
+    SearchValue,
+    ...payload,
+  };
+  const url = `${domain}/erpapi/getitems/obj?pars=`;
+  const response = await fetch(constructApi(url, params));
+  const data = await response.json();
+  return data;
+};

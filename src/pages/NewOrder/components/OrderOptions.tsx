@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FormControl,
   RadioGroup,
@@ -15,6 +15,9 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import { profilColors } from "../../../constants";
 import { NewOrderContext } from "../NewOrderContext";
+import Autocomplete from "../../../components/AutoComplete";
+import { getItems } from "../../../api/fetch";
+import ColorSelections from "./ColorSelections";
 
 type Props = {
   isDisabled: boolean;
@@ -62,6 +65,18 @@ const OrderOptions = ({ isDisabled }: Props) => {
     const c = (event.target as HTMLInputElement).value;
     setColorValue(c);
   };
+
+  const handleGetCollorType = async () => {
+    const data = await getItems({ BOption: 40, Company: 1, AFM: "" });
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (orderColor === profilColors.COLOR) {
+      handleGetCollorType();
+    }
+  }, [orderColor]);
+
   return (
     <FormControl component="fieldset">
       <RadioGroup
@@ -98,27 +113,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
               label="Χρώμα"
             />
           </Grid>
-
-          {orderColor === profilColors.COLOR && (
-            <Grid item>
-              <Grid container spacing={3} alignItems="flex-end">
-                <Grid item>
-                  <TextField
-                    id="input-with-icon-grid"
-                    onChange={handleChangeColor}
-                    label="Κωδικός..."
-                    disabled={isDisabled}
-                    value={colorValue}
-                  />
-                </Grid>
-                <Grid item>
-                  <SearchIcon />
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
         </Grid>
       </RadioGroup>
+      {orderColor === profilColors.COLOR && <ColorSelections />}
     </FormControl>
   );
 };
