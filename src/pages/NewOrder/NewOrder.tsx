@@ -71,6 +71,7 @@ export const NewOrder = () => {
   const [finDoc, setFindoc] = useState(null);
   const [pdfCode, setPdfCode] = useState(null);
   const [colorValue, SetColorValue] = useState(null);
+  const [selectedColorCompany, setSelectedColorCompany] = useState(null);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
@@ -158,9 +159,9 @@ export const NewOrder = () => {
     });
   };
 
-  const setColorValue = (val) => {
+  const setColorValue = useCallback((val) => {
     SetColorValue(val);
-  };
+  }, []);
 
   const setFinCode = (val) => {
     setSelectedInfo({
@@ -204,6 +205,8 @@ export const NewOrder = () => {
         qtY1: orderItem.qt1converted,
         qtY2: orderItem.qtY2,
         remarks: remarkValue,
+        CCCBAFIOID: selectedColorCompany,
+        ccCPOUDRAID: colorValue.ccCPOUDRAID,
       };
     });
 
@@ -216,21 +219,25 @@ export const NewOrder = () => {
       console.log(data); // JSON data parsed by `data.json()` call
     });
   };
+  const stateData = {
+    selectedInfo,
+    actions,
+    orderColor,
+    colorValue,
+    handleSetSelectedValue,
+    setWeight,
+    setComments,
+    setOrderColor,
+    setColorValue,
+    setFinCode,
+    setSelectedColorCompany,
+    selectedColorCompany,
+  };
+
+  console.log("stateData", stateData);
+
   return (
-    <NewOrderContext.Provider
-      value={{
-        selectedInfo,
-        actions,
-        orderColor,
-        colorValue,
-        handleSetSelectedValue,
-        setWeight,
-        setComments,
-        setOrderColor,
-        setColorValue,
-        setFinCode,
-      }}
-    >
+    <NewOrderContext.Provider value={stateData}>
       <Grid container spacing={3} justifyContent="center">
         <BackToMenu />
         <Grid item xs={12}>
@@ -238,7 +245,7 @@ export const NewOrder = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={12}>
               <OrderOptions isDisabled={rows.length > 0} />
             </Grid>
           </Grid>

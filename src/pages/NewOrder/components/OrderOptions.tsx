@@ -66,56 +66,62 @@ const OrderOptions = ({ isDisabled }: Props) => {
     setColorValue(c);
   };
 
-  const handleGetCollorType = async () => {
-    const data = await getItems({ BOption: 40, Company: 1, AFM: "" });
-    console.log(data);
-  };
+  // const handleGetCollorType = async () => {
+  //   const data = await getItems({ BOption: 40, Company: 1, AFM: "" });
+  //   console.log(data);
+  // };
 
-  useEffect(() => {
-    if (orderColor === profilColors.COLOR) {
-      handleGetCollorType();
-    }
-  }, [orderColor]);
+  // useEffect(() => {
+  //   if (orderColor === profilColors.COLOR) {
+  //     handleGetCollorType();
+  //   }
+  // }, [orderColor]);
 
   return (
-    <FormControl component="fieldset">
-      <RadioGroup
-        aria-label="orders"
-        row
-        name="orders"
-        value={orderColor}
-        onChange={handleChangeType}
-      >
-        <Grid container spacing={3} alignItems="flex-end">
-          <Grid item>
-            <FormControlLabel
-              value={profilColors.BLANK}
-              control={<GreenRadio />}
-              label="Άβαφο"
-              disabled={isDisabled}
-            />
-          </Grid>
+    <FormControl component="fieldset" fullWidth>
+      <Grid container spacing={3} alignItems="center">
+        <Grid item>
+          <RadioGroup
+            aria-label="orders"
+            row
+            name="orders"
+            value={orderColor}
+            onChange={handleChangeType}
+          >
+            <Grid container spacing={3} alignItems="flex-end">
+              <Grid item>
+                <FormControlLabel
+                  value={profilColors.BLANK}
+                  control={<GreenRadio />}
+                  label="Άβαφο"
+                  disabled={isDisabled}
+                />
+              </Grid>
 
-          <Grid item>
-            <FormControlLabel
-              value={profilColors.WHITE}
-              disabled={isDisabled}
-              control={<GreenRadio />}
-              label="Λευκό"
-            />
-          </Grid>
+              <Grid item>
+                <FormControlLabel
+                  value={profilColors.WHITE}
+                  disabled={isDisabled}
+                  control={<GreenRadio />}
+                  label="Λευκό"
+                />
+              </Grid>
 
-          <Grid item>
-            <FormControlLabel
-              value={profilColors.COLOR}
-              disabled={isDisabled}
-              control={<GreenRadio />}
-              label="Χρώμα"
-            />
-          </Grid>
+              <Grid item>
+                <FormControlLabel
+                  value={profilColors.COLOR}
+                  disabled={isDisabled}
+                  control={<GreenRadio />}
+                  label="Χρώμα"
+                />
+              </Grid>
+            </Grid>
+          </RadioGroup>
         </Grid>
-      </RadioGroup>
-      {orderColor === profilColors.COLOR && <ColorSelections />}
+        <Grid item xs={12} md={12}>
+          {orderColor === profilColors.COLOR && <ColorSelections />}
+        </Grid>
+      </Grid>
     </FormControl>
   );
 };

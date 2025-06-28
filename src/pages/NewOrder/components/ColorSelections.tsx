@@ -13,23 +13,32 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
+interface IColorData {
+  ccCPOUDRAID: number;
+  sku: string;
+}
+
 export default function ColorSelections() {
-  const { setColorValue, colorValue } = useContext(NewOrderContext);
+  const {
+    setColorValue,
+    colorValue,
+    setSelectedColorCompany,
+    selectedColorCompany,
+  } = useContext(NewOrderContext);
 
   const [colorTypes, setColorTypes] = useState([]);
-  const [colorType, setColorType] = useState("");
-  const [colorCompany, setColorCompany] = useState([]);
-  const [selectedColorCompany, setSelectedColorCompany] = useState("");
+  const [colorType, setColorType] = useState(null);
   const [manifacturer, setManifacturer] = useState([]);
+  const [colorCompany, setColorCompany] = useState([]);
   const [selectedManifacturer, setSelectedManifacturer] = useState("");
-  const [colorData, setColorData] = useState([]);
+  const [colorData, setColorData] = useState<IColorData[]>([]);
 
   const handleGetCollorData = async (boption: number) => {
     switch (boption) {
-      case 40:
-        const data40 = await getItems({ BOption: 40, Company: 1, AFM: "" });
+      case 30:
+        const data30 = await getItems({ BOption: 30, Company: 1, AFM: "" });
         setColorTypes(
-          data40.map((item: { id: number; name: string }) => ({
+          data30.map((item: { id: number; name: string }) => ({
             id: item.id,
             name: item.name,
           }))
@@ -44,10 +53,10 @@ export default function ColorSelections() {
           }))
         );
         break;
-      case 30:
-        const data30 = await getItems({ BOption: 30, Company: 1, AFM: "" });
+      case 40:
+        const data40 = await getItems({ BOption: 40, Company: 1, AFM: "" });
         setManifacturer(
-          data30.map((item: { id: number; code: string }) => ({
+          data40.map((item: { id: number; code: string }) => ({
             trdr: item.id,
             name: item.code,
           }))
@@ -58,58 +67,76 @@ export default function ColorSelections() {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setColorType(event.target.value as string);
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<{ value: unknown }>) => {
+      //reset all values
+      setColorValue(null);
+      setManifacturer([]);
+      setColorCompany([]);
+      setColorData([]);
+      setSelectedColorCompany("");
+      setSelectedManifacturer("");
+      setColorType(event.target.value as string);
+    },
+    [setColorValue]
+  );
 
-  const handleChangeCompany = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setSelectedColorCompany(event.target.value as string);
-  };
+  const handleChangeCompany = useCallback(
+    (event: React.ChangeEvent<{ value: unknown }>) => {
+      setColorValue(null);
+      setSelectedColorCompany(event.target.value as string);
+    },
+    [setSelectedColorCompany, setColorValue]
+  );
 
-  const handleChangeManifacturer = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setSelectedManifacturer(event.target.value as string);
-  };
+  const handleChangeManifacturer = useCallback(
+    (event: React.ChangeEvent<{ value: unknown }>) => {
+      setColorValue(null);
+      setSelectedManifacturer(event.target.value as string);
+    },
+    [setColorValue]
+  );
 
-  const handleInputChange = (
-    event: React.SyntheticEvent,
-    newInputValue: string
-  ) => {
-    setColorValue(newInputValue);
-  };
+  const handleInputChange = useCallback(
+    (event: React.SyntheticEvent, newInputValue: string) => {
+      setColorValue(newInputValue);
+    },
+    [setColorValue]
+  );
 
-  const handleChangeColor = (
-    event: React.SyntheticEvent,
-    newValue: string | null
-  ) => {
-    setColorValue(newValue ?? "");
-  };
+  const handleChangeColor = useCallback(
+    (event: React.SyntheticEvent, newValue: IColorData | string | null) => {
+      setColorValue(newValue ?? "");
+    },
+    [setColorValue]
+  );
 
   const handleGetColor = useCallback(
     async (id: number) => {
-      //{BOption: 50, Company: 1, SearchValue: "tes*", id: 16, LastId:1, AFM:""}
-      const data: { ccCPOUDRAID: number; sku: string }[] = await getItems({
+      const data: IColorData[] = await getItems({
         BOption: 50,
         Company: 1,
         AFM: "",
-        id: Number(selectedManifacturer),
+        //if colorType is 3, then id is 20, else id is selectedManifacturer
+        id: Number(colorType) === 3 ? 20 : Number(selectedManifacturer),
         LastId: Number(colorType),
         SearchValue: colorValue,
       });
       //[{"ccCPOUDRAID":15606,"sku":"SE802G-MATT-1002"}]
-      setColorData(data.map((item: { sku: string }) => item.sku));
+      setColorData(data);
     },
     [colorType, colorValue, selectedManifacturer]
   );
 
   useEffect(() => {
-    handleGetCollorData(40);
+    handleGetCollorData(30);
   }, []);
 
   useEffect(() => {
+    if (colorType === "3") {
+      handleGetCollorData(50);
+      return;
+    }
     if (colorType) {
       handleGetCollorData(60);
     }
@@ -117,21 +144,23 @@ export default function ColorSelections() {
 
   useEffect(() => {
     if (selectedColorCompany) {
-      handleGetCollorData(30);
+      handleGetCollorData(40);
     }
   }, [selectedColorCompany]);
 
   useEffect(() => {
-    if (selectedManifacturer) {
+    if (selectedManifacturer || colorType === 3) {
       handleGetColor(50);
     }
   }, [colorType, handleGetColor, selectedManifacturer]);
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Τύπος Χρώματος</InputLabel>
+      <Grid item md={3}>
+        <FormControl fullWidth style={{ maxWidth: 300 }}>
+          <InputLabel id="demo-simple-select-label">
+            Τύπος Χρώματος 30
+          </InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -148,8 +177,8 @@ export default function ColorSelections() {
         </FormControl>
       </Grid>
       {colorType && (
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth style={{ maxWidth: 300 }}>
             <InputLabel id="demo-simple-select-label">
               Επιλογή Βαφείου
             </InputLabel>
@@ -157,7 +186,7 @@ export default function ColorSelections() {
               labelId="demo-simple-select-company-label"
               id="demo-simple-select-company"
               value={selectedColorCompany}
-              label="Επιλογή Βαφείου"
+              label="Επιλογή Βαφείου 60"
               onChange={handleChangeCompany}
             >
               {colorCompany.map(
@@ -171,9 +200,9 @@ export default function ColorSelections() {
           </FormControl>
         </Grid>
       )}
-      {selectedColorCompany && (
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth>
+      {selectedColorCompany && colorType !== 3 && (
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth style={{ maxWidth: 300 }}>
             <InputLabel id="demo-simple-select-label">
               Επιλογή Κατασκευαστή
             </InputLabel>
@@ -181,7 +210,7 @@ export default function ColorSelections() {
               labelId="demo-simple-select-manifacturer-label"
               id="demo-simple-select-manifacturer"
               value={selectedManifacturer}
-              label="Επιλογή Κατασκευαστή"
+              label="Επιλογή Κατασκευαστή 40"
               onChange={handleChangeManifacturer}
             >
               {manifacturer.map(
@@ -195,35 +224,36 @@ export default function ColorSelections() {
           </FormControl>
         </Grid>
       )}
-      {selectedManifacturer && (
-        <Grid item xs={12} md={12}>
-          <Grid container spacing={3} alignItems="flex-end">
-            <Grid item xs={12} md={12}>
+      {(selectedManifacturer || colorType === 3) && (
+        <Grid item xs={12} md={3}>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={12} alignItems="center">
               <Autocomplete
+                style={{ maxWidth: 300 }}
                 freeSolo
-                value={colorValue}
+                value={colorValue?.value ?? ""}
+                onChange={handleChangeColor}
+                onInputChange={handleInputChange}
                 options={colorData}
-                getOptionLabel={(option) => option}
+                getOptionLabel={(option) =>
+                  typeof option === "string" ? option : option.sku
+                }
                 renderInput={(params) => (
                   <Grid
                     container
-                    spacing={3}
                     alignItems="center"
                     justifyContent="space-between"
                     direction="row"
                   >
                     <Grid item xs={12} md={10}>
-                      <TextField
-                        fullWidth
-                        {...params}
-                        label="Κωδικός..."
-                        onChange={(event) =>
-                          handleInputChange(event, event.target.value as string)
-                        }
-                      />
-                    </Grid>
-                    <Grid item>
-                      <SearchIcon />
+                      <Grid container alignItems="flex-end">
+                        <Grid item xs={10}>
+                          <TextField fullWidth {...params} label="Κωδικός..." />
+                        </Grid>
+                        <Grid item>
+                          <SearchIcon />
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 )}
