@@ -18,6 +18,7 @@ import { NewOrderContext } from "../NewOrderContext";
 import Autocomplete from "../../../components/AutoComplete";
 import { getItems } from "../../../api/fetch";
 import ColorSelections from "./ColorSelections";
+import ColorCompany from "./ColorCompany";
 
 type Props = {
   isDisabled: boolean;
@@ -50,6 +51,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
     actions,
     setFinCode,
     colorValue,
+    setSelectedColorCompany,
+    selectedTrdpgroup,
+    setSelectedTrdpgroup,
   } = useContext(NewOrderContext);
   const { comments } = selectedInfo.data;
 
@@ -57,6 +61,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
     actions.resetSelection();
     const v = (event.target as HTMLInputElement).value;
     // setValue(v);
+    setSelectedTrdpgroup(null);
+    setColorValue("");
+    setSelectedColorCompany(null);
     setOrderColor(v);
     setFinCode(selectedInfo.data.fincode);
     // v !== "2" && setColorValue("");
@@ -121,20 +128,46 @@ const OrderOptions = ({ isDisabled }: Props) => {
             </Grid>
           </RadioGroup>
         </Grid>
-        <Grid item xs={12} md={12}>
-          {afmValue === "777777777" && orderColor === profilColors.COLOR ? (
-            <Grid item>
-              <ColorSelections />
-            </Grid>
-          ) : (
-            orderColor === profilColors.COLOR && (
+        {orderColor === profilColors.COLOR && (
+          <Grid item xs={12} md={12}>
+            <ColorCompany />
+          </Grid>
+        )}
+        {orderColor === profilColors.COLOR && (
+          <Grid item xs={12} md={12}>
+            {afmValue === "777777777" ? (
+              selectedTrdpgroup === 1 ? (
+                <Grid item>
+                  <ColorSelections />
+                </Grid>
+              ) : (
+                selectedTrdpgroup && (
+                  <Grid item>
+                    <Grid container spacing={3} alignItems="flex-end">
+                      <Grid item>
+                        <TextField
+                          id="input-with-icon-grid"
+                          onChange={handleChangeColor}
+                          label="Κωδικός..."
+                          disabled={isDisabled}
+                          value={colorValue}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <SearchIcon />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )
+              )
+            ) : (
               <Grid item>
                 <Grid container spacing={3} alignItems="flex-end">
                   <Grid item>
                     <TextField
                       id="input-with-icon-grid"
                       onChange={handleChangeColor}
-                      label="Κωδικός..."
+                      label="Κωδικός... out"
                       disabled={isDisabled}
                       value={colorValue}
                     />
@@ -144,9 +177,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
                   </Grid>
                 </Grid>
               </Grid>
-            )
-          )}
-        </Grid>
+            )}
+          </Grid>
+        )}
       </Grid>
     </FormControl>
   );

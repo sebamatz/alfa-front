@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { useEffect, useState } from "react";
 import { NewOrderContext } from "../NewOrderContext";
-import { getItems, IGetItems } from "../../../api/fetch";
+import { getItems } from "../../../api/fetch";
 import {
   FormControl,
   Grid,
@@ -19,17 +19,11 @@ interface IColorData {
 }
 
 export default function ColorSelections() {
-  const {
-    setColorValue,
-    colorValue,
-    setSelectedColorCompany,
-    selectedColorCompany,
-  } = useContext(NewOrderContext);
+  const { setColorValue, colorValue } = useContext(NewOrderContext);
 
   const [colorTypes, setColorTypes] = useState([]);
   const [colorType, setColorType] = useState(null);
   const [manifacturer, setManifacturer] = useState([]);
-  const [colorCompany, setColorCompany] = useState([]);
   const [selectedManifacturer, setSelectedManifacturer] = useState("");
   const [colorData, setColorData] = useState<IColorData[]>([]);
 
@@ -40,15 +34,6 @@ export default function ColorSelections() {
         setColorTypes(
           data30.map((item: { id: number; name: string }) => ({
             id: item.id,
-            name: item.name,
-          }))
-        );
-        break;
-      case 60:
-        const data60 = await getItems({ BOption: 60, Company: 10, AFM: "" });
-        setColorCompany(
-          data60.map((item: { trdr: number; name: string }) => ({
-            trdr: item.trdr,
             name: item.name,
           }))
         );
@@ -67,26 +52,15 @@ export default function ColorSelections() {
     }
   };
 
-  const handleChange = useCallback(
+  const handleChangeColorType = useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
       //reset all values
       setColorValue(null);
-      setManifacturer([]);
-      setColorCompany([]);
-      setColorData([]);
-      setSelectedColorCompany("");
       setSelectedManifacturer("");
+      setManifacturer([]);
       setColorType(event.target.value as string);
     },
-    [setColorValue]
-  );
-
-  const handleChangeCompany = useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
-      setColorValue(null);
-      setSelectedColorCompany(event.target.value as string);
-    },
-    [setSelectedColorCompany, setColorValue]
+    [setColorType, setColorValue, setSelectedManifacturer, setManifacturer]
   );
 
   const handleChangeManifacturer = useCallback(
@@ -105,28 +79,25 @@ export default function ColorSelections() {
   );
 
   const handleChangeColor = useCallback(
-    (event: React.SyntheticEvent, newValue: IColorData | string | null) => {
+    (event: any, newValue: any | string | null) => {
       setColorValue(newValue ?? "");
     },
     [setColorValue]
   );
 
-  const handleGetColor = useCallback(
-    async (id: number) => {
-      const data: IColorData[] = await getItems({
-        BOption: 50,
-        Company: 1,
-        AFM: "",
-        //if colorType is 3, then id is 20, else id is selectedManifacturer
-        id: Number(colorType) === 3 ? 20 : Number(selectedManifacturer),
-        LastId: Number(colorType),
-        SearchValue: colorValue,
-      });
-      //[{"ccCPOUDRAID":15606,"sku":"SE802G-MATT-1002"}]
-      setColorData(data);
-    },
-    [colorType, colorValue, selectedManifacturer]
-  );
+  const handleGetColor = useCallback(async () => {
+    const data: IColorData[] = await getItems({
+      BOption: 50,
+      Company: 1,
+      AFM: "",
+      //if colorType is 3, then id is 20, else id is selectedManifacturer
+      id: Number(colorType) === 3 ? 20 : Number(selectedManifacturer),
+      LastId: Number(colorType),
+      SearchValue: colorValue,
+    });
+    //[{"ccCPOUDRAID":15606,"sku":"SE802G-MATT-1002"}]
+    setColorData(data);
+  }, [colorType, colorValue, selectedManifacturer]);
 
   useEffect(() => {
     handleGetCollorData(30);
@@ -136,27 +107,20 @@ export default function ColorSelections() {
     if (colorType === "3") {
       handleGetCollorData(50);
       return;
-    }
-    if (colorType) {
-      handleGetCollorData(60);
+    } else {
+      handleGetCollorData(40);
     }
   }, [colorType]);
 
   useEffect(() => {
-    if (selectedColorCompany) {
-      handleGetCollorData(40);
+    if (selectedManifacturer && colorType !== "3") {
+      handleGetColor();
     }
-  }, [selectedColorCompany]);
-
-  useEffect(() => {
-    if (selectedManifacturer || colorType === 3) {
-      handleGetColor(50);
-    }
-  }, [colorType, handleGetColor, selectedManifacturer]);
+  }, [selectedManifacturer, handleGetColor, colorType]);
 
   return (
     <Grid container spacing={2}>
-      <Grid item md={3} xs={12}>
+      <Grid item xs={12} md={3}>
         <FormControl fullWidth style={{ maxWidth: 300 }}>
           <InputLabel id="demo-simple-select-label">Τύπος Χρώματος</InputLabel>
           <Select
@@ -164,7 +128,7 @@ export default function ColorSelections() {
             id="demo-simple-select"
             value={colorType}
             label="Age"
-            onChange={handleChange}
+            onChange={handleChangeColorType}
           >
             {colorTypes.map((colorType) => (
               <MenuItem key={colorType.id} value={colorType.id}>
@@ -174,31 +138,24 @@ export default function ColorSelections() {
           </Select>
         </FormControl>
       </Grid>
-      {colorType && (
-        <Grid item xs={12} md={3}>
-          <FormControl fullWidth style={{ maxWidth: 300 }}>
-            <InputLabel id="demo-simple-select-label">
-              Επιλογή Βαφείου
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-company-label"
-              id="demo-simple-select-company"
-              value={selectedColorCompany}
-              label="Επιλογή Βαφείου 60"
-              onChange={handleChangeCompany}
-            >
-              {colorCompany.map(
-                (colorCompany: { trdr: number; name: string }) => (
-                  <MenuItem key={colorCompany.trdr} value={colorCompany.trdr}>
-                    {colorCompany.name}
-                  </MenuItem>
-                )
-              )}
-            </Select>
-          </FormControl>
+      {colorType === 3 ? (
+        <Grid item>
+          <Grid container spacing={3} alignItems="flex-end">
+            <Grid item>
+              <TextField
+                id="input-with-icon-grid"
+                onChange={(e) => handleChangeColor(e, e.target.value)}
+                label="Κωδικός..."
+                disabled={false}
+                value={colorValue}
+              />
+            </Grid>
+            <Grid item>
+              <SearchIcon />
+            </Grid>
+          </Grid>
         </Grid>
-      )}
-      {selectedColorCompany && colorType !== 3 && (
+      ) : (
         <Grid item xs={12} md={3}>
           <FormControl fullWidth style={{ maxWidth: 300 }}>
             <InputLabel id="demo-simple-select-label">
@@ -222,7 +179,7 @@ export default function ColorSelections() {
           </FormControl>
         </Grid>
       )}
-      {(selectedManifacturer || colorType === 3) && (
+      {selectedManifacturer && (
         <Grid item xs={12} md={3}>
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} md={12} alignItems="center">
@@ -246,7 +203,11 @@ export default function ColorSelections() {
                     <Grid item xs={12} md={10}>
                       <Grid container alignItems="flex-end">
                         <Grid item xs={10}>
-                          <TextField fullWidth {...params} label="Κωδικός..." />
+                          <TextField
+                            fullWidth
+                            {...params}
+                            label="Κωδικός... in"
+                          />
                         </Grid>
                         <Grid item>
                           <SearchIcon />

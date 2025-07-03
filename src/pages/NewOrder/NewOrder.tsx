@@ -71,6 +71,7 @@ export const NewOrder = () => {
   const [finDoc, setFindoc] = useState(null);
   const [pdfCode, setPdfCode] = useState(null);
   const [colorValue, SetColorValue] = useState(null);
+  const [colorCompany, setColorCompany] = useState([]);
   const [selectedColorCompany, setSelectedColorCompany] = useState(null);
   const [selectedTrdpgroup, setSelectedTrdpgroup] = useState(null);
 
@@ -238,6 +239,8 @@ export const NewOrder = () => {
     selectedColorCompany,
     selectedTrdpgroup,
     setSelectedTrdpgroup,
+    colorCompany,
+    setColorCompany,
   };
 
   console.log("stateData", stateData);
