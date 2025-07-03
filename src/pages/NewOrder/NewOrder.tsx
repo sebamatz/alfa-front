@@ -72,6 +72,7 @@ export const NewOrder = () => {
   const [pdfCode, setPdfCode] = useState(null);
   const [colorValue, SetColorValue] = useState(null);
   const [selectedColorCompany, setSelectedColorCompany] = useState(null);
+  const [selectedTrdpgroup, setSelectedTrdpgroup] = useState(null);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
@@ -194,19 +195,22 @@ export const NewOrder = () => {
 
     const orderData: any = rows.map((orderItem) => {
       return {
-        company: 1,
+        company: 10,
         boption: orderColor,
         trdr: selectedBranch.trdr,
         trdbranch:
           selectedBranch.trdbranch === 0 ? null : selectedBranch.trdbranch,
-        comments: colorValue,
+        comments:
+          colorValue && typeof colorValue === "object"
+            ? colorValue.sku
+            : colorValue,
         mtrl: orderItem.mtrl,
         commentS1: orderItem.commentS1,
         qtY1: orderItem.qt1converted,
         qtY2: orderItem.qtY2,
         remarks: remarkValue,
         CCCBAFIOID: selectedColorCompany,
-        ccCPOUDRAID: colorValue.ccCPOUDRAID,
+        ccCPOUDRAID: colorValue && colorValue.ccCPOUDRAID,
       };
     });
 
@@ -232,6 +236,8 @@ export const NewOrder = () => {
     setFinCode,
     setSelectedColorCompany,
     selectedColorCompany,
+    selectedTrdpgroup,
+    setSelectedTrdpgroup,
   };
 
   console.log("stateData", stateData);

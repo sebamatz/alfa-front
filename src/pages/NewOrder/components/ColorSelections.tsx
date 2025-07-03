@@ -36,7 +36,7 @@ export default function ColorSelections() {
   const handleGetCollorData = async (boption: number) => {
     switch (boption) {
       case 30:
-        const data30 = await getItems({ BOption: 30, Company: 1, AFM: "" });
+        const data30 = await getItems({ BOption: 30, Company: 10, AFM: "" });
         setColorTypes(
           data30.map((item: { id: number; name: string }) => ({
             id: item.id,
@@ -45,7 +45,7 @@ export default function ColorSelections() {
         );
         break;
       case 60:
-        const data60 = await getItems({ BOption: 60, Company: 1, AFM: "" });
+        const data60 = await getItems({ BOption: 60, Company: 10, AFM: "" });
         setColorCompany(
           data60.map((item: { trdr: number; name: string }) => ({
             trdr: item.trdr,
@@ -54,7 +54,7 @@ export default function ColorSelections() {
         );
         break;
       case 40:
-        const data40 = await getItems({ BOption: 40, Company: 1, AFM: "" });
+        const data40 = await getItems({ BOption: 40, Company: 10, AFM: "" });
         setManifacturer(
           data40.map((item: { id: number; code: string }) => ({
             trdr: item.id,
@@ -156,11 +156,9 @@ export default function ColorSelections() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item md={3}>
+      <Grid item md={3} xs={12}>
         <FormControl fullWidth style={{ maxWidth: 300 }}>
-          <InputLabel id="demo-simple-select-label">
-            Τύπος Χρώματος 30
-          </InputLabel>
+          <InputLabel id="demo-simple-select-label">Τύπος Χρώματος</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"

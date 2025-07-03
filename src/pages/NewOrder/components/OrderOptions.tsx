@@ -66,6 +66,9 @@ const OrderOptions = ({ isDisabled }: Props) => {
     setColorValue(c);
   };
 
+  const afmValue = (document.getElementById("userAfm") as HTMLInputElement)
+    ?.value;
+
   // const handleGetCollorType = async () => {
   //   const data = await getItems({ BOption: 40, Company: 1, AFM: "" });
   //   console.log(data);
@@ -119,7 +122,30 @@ const OrderOptions = ({ isDisabled }: Props) => {
           </RadioGroup>
         </Grid>
         <Grid item xs={12} md={12}>
-          {orderColor === profilColors.COLOR && <ColorSelections />}
+          {afmValue === "777777777" && orderColor === profilColors.COLOR ? (
+            <Grid item>
+              <ColorSelections />
+            </Grid>
+          ) : (
+            orderColor === profilColors.COLOR && (
+              <Grid item>
+                <Grid container spacing={3} alignItems="flex-end">
+                  <Grid item>
+                    <TextField
+                      id="input-with-icon-grid"
+                      onChange={handleChangeColor}
+                      label="Κωδικός..."
+                      disabled={isDisabled}
+                      value={colorValue}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <SearchIcon />
+                  </Grid>
+                </Grid>
+              </Grid>
+            )
+          )}
         </Grid>
       </Grid>
     </FormControl>
