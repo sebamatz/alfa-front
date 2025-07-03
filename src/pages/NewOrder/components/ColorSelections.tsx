@@ -203,11 +203,7 @@ export default function ColorSelections() {
                     <Grid item xs={12} md={10}>
                       <Grid container alignItems="flex-end">
                         <Grid item xs={10}>
-                          <TextField
-                            fullWidth
-                            {...params}
-                            label="Κωδικός... in"
-                          />
+                          <TextField fullWidth {...params} label="Κωδικός..." />
                         </Grid>
                         <Grid item>
                           <SearchIcon />
