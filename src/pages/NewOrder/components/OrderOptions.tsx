@@ -135,48 +135,29 @@ const OrderOptions = ({ isDisabled }: Props) => {
         )}
         {orderColor === profilColors.COLOR && (
           <Grid item xs={12} md={12}>
-            {afmValue === "777777777" ? (
-              selectedTrdpgroup === 1 ? (
+            {selectedTrdpgroup === 1 ? (
+              <Grid item>
+                <ColorSelections />
+              </Grid>
+            ) : (
+              selectedTrdpgroup && (
                 <Grid item>
-                  <ColorSelections />
-                </Grid>
-              ) : (
-                selectedTrdpgroup && (
-                  <Grid item>
-                    <Grid container spacing={3} alignItems="flex-end">
-                      <Grid item>
-                        <TextField
-                          id="input-with-icon-grid"
-                          onChange={handleChangeColor}
-                          label="Κωδικός..."
-                          disabled={isDisabled}
-                          value={colorValue}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <SearchIcon />
-                      </Grid>
+                  <Grid container spacing={3} alignItems="flex-end">
+                    <Grid item>
+                      <TextField
+                        id="input-with-icon-grid"
+                        onChange={handleChangeColor}
+                        label="Κωδικός..."
+                        disabled={isDisabled}
+                        value={colorValue}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <SearchIcon />
                     </Grid>
                   </Grid>
-                )
-              )
-            ) : (
-              <Grid item>
-                <Grid container spacing={3} alignItems="flex-end">
-                  <Grid item>
-                    <TextField
-                      id="input-with-icon-grid"
-                      onChange={handleChangeColor}
-                      label="Κωδικός... out"
-                      disabled={isDisabled}
-                      value={colorValue}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <SearchIcon />
-                  </Grid>
                 </Grid>
-              </Grid>
+              )
             )}
           </Grid>
         )}
