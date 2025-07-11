@@ -48,6 +48,31 @@ function App() {
     }
   }, [afm]);
 
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Optional: validate event.origin for security
+      // if (event.origin !== 'https://your-parent-domain.com') return;
+
+      const { userAfm } = event.data;
+      if (userAfm) {
+        getbranches(userAfm).then((data: any) => {
+          setBranch(data);
+          if (data?.length === 1) {
+            setSelectBranch(data[0]);
+          }
+          setAfm(userAfm);
+        });
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <BranchesContext.Provider
