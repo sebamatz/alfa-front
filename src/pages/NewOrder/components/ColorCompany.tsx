@@ -15,7 +15,7 @@ export default function ColorCompany() {
   } = useContext(NewOrderContext);
 
   const getColorCompanies = useCallback(async () => {
-    const data60 = await getItems({ BOption: 60, Company: 10, AFM: "" });
+    const data60 = await getItems({ BOption: 60, Company: 10 });
     setColorCompany(
       data60.map((item: { trdr: number; name: string; trdpgroup: number }) => ({
         trdr: item.trdr,

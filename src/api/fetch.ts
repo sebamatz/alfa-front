@@ -1,4 +1,4 @@
-import { domain } from "../config";
+import { company, domain } from "../config";
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -39,7 +39,7 @@ export const fechOrders = async (data) => {
 
 export const fechGroups = async () => {
   const data = {
-    Company: 1,
+    Company: company,
   };
 
   const result = await getData(`${domain}/erpapi/getgroups?pars=`, data);
@@ -50,7 +50,7 @@ export const fechGroups = async () => {
 
 export const getbranches = async (afm: string) => {
   const data = {
-    Company: 1,
+    Company: company,
     AFM: afm,
   };
 
@@ -61,7 +61,7 @@ export const getbranches = async (afm: string) => {
 //put order
 const defaults = [
   {
-    Company: 1,
+    Company: company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -72,7 +72,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: 1,
+    Company: company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -83,7 +83,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: 1,
+    Company: company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -170,12 +170,7 @@ export interface IGetItems {
 }
 
 export const getItems = async (payload: IGetItems) => {
-  const { Company, BOption, AFM, SearchValue = "  " } = payload;
   const params = {
-    Company,
-    BOption,
-    AFM,
-    SearchValue,
     ...payload,
   };
   const url = `${domain}/erpapi/getitems/obj?pars=`;

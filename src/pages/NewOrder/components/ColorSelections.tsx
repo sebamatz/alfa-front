@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { company } from "../../../config";
 
 interface IColorData {
   ccCPOUDRAID: number;
@@ -30,7 +31,7 @@ export default function ColorSelections() {
   const handleGetCollorData = async (boption: number) => {
     switch (boption) {
       case 30:
-        const data30 = await getItems({ BOption: 30, Company: 10, AFM: "" });
+        const data30 = await getItems({ BOption: 30, Company: company });
         setColorTypes(
           data30.map((item: { id: number; name: string }) => ({
             id: item.id,
@@ -39,7 +40,7 @@ export default function ColorSelections() {
         );
         break;
       case 40:
-        const data40 = await getItems({ BOption: 40, Company: 10, AFM: "" });
+        const data40 = await getItems({ BOption: 40, Company: company });
         setManifacturer(
           data40.map((item: { id: number; code: string }) => ({
             trdr: item.id,
@@ -88,8 +89,7 @@ export default function ColorSelections() {
   const handleGetColor = useCallback(async () => {
     const data: IColorData[] = await getItems({
       BOption: 50,
-      Company: 1,
-      AFM: "",
+      Company: company,
       //if colorType is 3, then id is 20, else id is selectedManifacturer
       id: Number(colorType) === 3 ? 20 : Number(selectedManifacturer),
       LastId: Number(colorType),
