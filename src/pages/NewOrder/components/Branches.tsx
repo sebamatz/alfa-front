@@ -1,6 +1,7 @@
 import { FormControl, Select, MenuItem, InputLabel } from "@material-ui/core";
 import React, { ReactElement, useContext, useEffect } from "react";
 import { BranchesContext } from "../../../context/BranchesContext";
+import { IBranch } from "../../../api/types";
 
 interface Props {}
 
@@ -10,7 +11,7 @@ export default function Branches({}: Props): ReactElement {
 
   const handleSelectBranch = (e: any) => {
     let val = e.target.value;
-    const selected = branch.find((data) => data.code === val);
+    const selected = branch.find((data: IBranch) => data.branchcode === val);
     setSelectBranch(selected);
   };
 
@@ -23,10 +24,10 @@ export default function Branches({}: Props): ReactElement {
         <Select
           onChange={handleSelectBranch}
           name="fincode"
-          value={selectedBranch.code}
+          value={selectedBranch?.branchcode}
         >
-          {branch.map((v: any, i) => (
-            <MenuItem value={v.code}>{v.address}</MenuItem>
+          {branch.map((v: IBranch, i) => ( 
+            <MenuItem value={v.branchcode}>{v.address}</MenuItem>
           ))}
         </Select>
       )}

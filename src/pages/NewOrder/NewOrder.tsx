@@ -10,11 +10,13 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
 import { Button, TextField, Typography } from "@material-ui/core";
-import { postData, downloadPdf } from "../../api/fetch";
+import { postData, downloadPdf, searchBranches, getbranches } from "../../api/fetch";
 import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
 import OrderDialog from "./Dialog";
 import { domain } from "../../config";
+import { Autocomplete } from "@material-ui/lab";
+import { IBranch, IGetBranchesResponse } from "../../api/types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +56,8 @@ const defaultValues: any = {
 
 export const NewOrder = () => {
   let history = useHistory();
-  const { selectedBranch, branch, setSelectBranch } =
+  const { selectedBranch, branch, setSelectBranch,
+     setAfm, setBranch } =
     useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
@@ -74,6 +77,7 @@ export const NewOrder = () => {
   const [colorCompany, setColorCompany] = useState([]);
   const [selectedColorCompany, setSelectedColorCompany] = useState(null);
   const [selectedTrdpgroup, setSelectedTrdpgroup] = useState(null);
+  const [branches, setBranches] = useState<IGetBranchesResponse[]>([]);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
@@ -245,6 +249,27 @@ export const NewOrder = () => {
 
   console.log("stateData", stateData);
 
+  const handleSelectBranch = async (event,value) => {
+    const selectedBranch: IGetBranchesResponse = branches.find((branch:IGetBranchesResponse) => branch.afm === value.afm);
+    console.log("event", event);
+    const data: IGetBranchesResponse[] = await getbranches(selectedBranch.afm); 
+    if (data[0]?.branches.length > 0) {
+      setBranch(data[0].branches);
+    }else{
+      setSelectBranch(data[0]);
+    }
+    setAfm(selectedBranch.afm);
+    console.log("handleSelectBranch", data);
+
+
+  }
+
+  const handleGetBranches = async (event,value) => {
+    console.log("event", event);  
+    const data: IGetBranchesResponse[] = await searchBranches(value); 
+    setBranches(data);
+  };
+
   return (
     <NewOrderContext.Provider value={stateData}>
       <Grid container spacing={3} justifyContent="center">
@@ -254,8 +279,14 @@ export const NewOrder = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={12}>
-              <OrderOptions isDisabled={rows.length > 0} />
+            <Grid item xs={12} md={4}>
+              <Autocomplete
+                options={branches} 
+                getOptionLabel={(option:IGetBranchesResponse) => option.trdrname}
+                renderInput={(params) => <TextField {...params} label="Επιλογή Πελάτη" />}
+                onChange={handleSelectBranch}
+                onInputChange={handleGetBranches}
+              />
             </Grid>
           </Grid>
         </Grid>

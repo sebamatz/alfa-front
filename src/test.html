@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>My App</title>
+    </head>
+    <body>
+
+        <iframe  id="userAfm" src="http://localhost:3000" value="777777700" width="100%" height="100%"></iframe>
+        <script>
+            const iframe = document.getElementById("userAfm");
+        
+            // Send the message after the iframe loads
+            iframe.addEventListener("load", () => {
+              const afmValue = iframe.getAttribute("value");
+        
+              // Send message to the iframe
+              iframe.contentWindow.postMessage({ userAfm: afmValue }, "*");
+            });
+          </script>
+    </body>
+</html>

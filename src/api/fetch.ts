@@ -39,7 +39,8 @@ export const fechOrders = async (data) => {
 
 export const fechGroups = async () => {
   const data = {
-    Company: company,
+    BOption: 1,
+    Company: 1,
   };
 
   const result = await getData(`${domain}/erpapi/getgroups?pars=`, data);
@@ -47,6 +48,17 @@ export const fechGroups = async () => {
 };
 
 //GET /erpapi/getbranches/obj
+
+export const searchBranches = async (searchValue: string) => {
+  const data = {
+    Company: company,
+    SearchValue: searchValue,
+  };
+
+  const result = await getData(`${domain}/erpapi/getbranches/obj?pars=`, data);
+  console.log("getbranches", result);
+  return result;
+};
 
 export const getbranches = async (afm: string) => {
   const data = {

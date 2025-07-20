@@ -31,37 +31,58 @@ function App() {
   const [afm, setAfm] = useState(null);
   const [branch, setBranch] = useState([]);
   const [selectedBranch, setSelectBranch] = useState({});
+  const [isEmployee, setIsEmployee] = useState(undefined);
+
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
+  // useEffect(() => {
+
+  //   console.log("here");
+  //   const afmValue: any = document.getElementById("userAfm");
+  //   if (afmValue) {
+  //     getbranches(afmValue.value).then((data: any) => {
+  //       setBranch(data);
+  //       if (data?.length === 1) {
+  //         setSelectBranch(data[0]);
+  //       }
+  //       setAfm(afmValue.value);
+  //     });
+  //   }
+  // }, [afm]);
+
   useEffect(() => {
-    console.log("here");
-    const afmValue: any = document.getElementById("userAfm");
-    if (afmValue) {
-      getbranches(afmValue.value).then((data: any) => {
-        setBranch(data);
-        if (data?.length === 1) {
-          setSelectBranch(data[0]);
-        }
-        setAfm(afmValue.value);
-      });
+    if (isEmployee) {
+      setAfm(null);
+      setBranch([]);
+      setSelectBranch({});
     }
-  }, [afm]);
+  }, [isEmployee]);
 
   useEffect(() => {
     const handleMessage = (event) => {
       // Optional: validate event.origin for security
       // if (event.origin !== 'https://your-parent-domain.com') return;
 
-      const { userAfm } = event.data;
+      const { userAfm }: { userAfm: string } = event.data;
+
+      // check if userAfm is a start with 7 sevens 
+
+      
+      
+
       if (userAfm) {
+        setIsEmployee(userAfm?.startsWith("7777777"));
+        if(isEmployee!==undefined){
         getbranches(userAfm).then((data: any) => {
-          setBranch(data);
-          if (data?.length === 1) {
-            setSelectBranch(data[0]);
+          console.log("data", data);
+          setBranch(data[0].branches);
+          if (data[0].branches?.length === 1) {
+            setSelectBranch(data[0].branches[0]);
           }
-          setAfm(userAfm);
-        });
+            setAfm(userAfm);
+          });
+        }
       }
     };
 
@@ -71,12 +92,15 @@ function App() {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, []);
+  }, [isEmployee]);
+
+  console.log("branch", branch);
 
   return (
     <ThemeProvider theme={theme}>
       <BranchesContext.Provider
-        value={{ branch, setBranch, selectedBranch, setSelectBranch }}
+        value={{ branch, setBranch, selectedBranch, 
+          setSelectBranch, isEmployee, afm, setAfm, setIsEmployee }}
       >
         {/* <CompanyOptions /> */}
         <div className="App">
