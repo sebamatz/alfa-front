@@ -281,6 +281,7 @@ export const NewOrder = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>
               <Autocomplete
+                style={{ width: 350, maxWidth: "100%" }}
                 options={branches} 
                 getOptionLabel={(option:IGetBranchesResponse) => option.trdrname}
                 renderInput={(params) => <TextField {...params} label="Επιλογή Πελάτη" />}
@@ -289,6 +290,11 @@ export const NewOrder = () => {
               />
             </Grid>
           </Grid>
+        </Grid>
+        <Grid item xs={12}>
+        
+        <OrderOptions isDisabled={rows.length > 0} />
+
         </Grid>
         <Grid item lg={12} sm={12} className={classes.table}>
           <DataTable
