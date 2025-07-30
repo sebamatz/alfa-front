@@ -9,7 +9,7 @@ import BackToMenu from "../../components/BackToMenu";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
-import { Button, TextField, Typography } from "@material-ui/core";
+import { Box, Button, TextField, Typography } from "@material-ui/core";
 import { postData, downloadPdf, searchBranches, getbranches } from "../../api/fetch";
 import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
@@ -282,6 +282,7 @@ export const NewOrder = () => {
           <Grid item xs={12}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "start"}}>
                 <Autocomplete
                   style={{ width: 350, maxWidth: "100%" }}
                   options={branches}
@@ -290,11 +291,8 @@ export const NewOrder = () => {
                   onChange={handleSelectBranch}
                   onInputChange={handleGetBranches}
                 />
-              </Grid>
-
-              <Grid item xs={12} md={4}>  {/* Επιλογή Τρόπου Πληρωμής */}
-
-                {selectedBranch.warning}
+                <div style={{ color: "red",paddingTop: "10px" }}>{selectedBranch.warning}</div>
+                </Box>
               </Grid>
             </Grid>
           </Grid>
