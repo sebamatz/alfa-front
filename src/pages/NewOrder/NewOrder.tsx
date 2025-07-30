@@ -57,7 +57,7 @@ const defaultValues: any = {
 export const NewOrder = () => {
   let history = useHistory();
   const { selectedBranch, branch, setSelectBranch,
-     setAfm, setBranch } =
+    setAfm, setBranch, isEmployee } =
     useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
@@ -249,14 +249,15 @@ export const NewOrder = () => {
 
   console.log("stateData", stateData);
 
-  const handleSelectBranch = async (event,value) => {
-    const selectedBranch: IGetBranchesResponse = branches.find((branch:IGetBranchesResponse) => branch.afm === value.afm);
+  const handleSelectBranch = async (event, value) => {
+    const selectedBranch: IGetBranchesResponse = branches.find((branch: IGetBranchesResponse) => branch?.afm === value?.afm);
     console.log("event", event);
-    const data: IGetBranchesResponse[] = await getbranches(selectedBranch.afm); 
+    const data: IGetBranchesResponse[] = await getbranches(selectedBranch?.afm);
     if (data[0]?.branches.length > 0) {
       setBranch(data[0].branches);
-    }else{
+    } else {
       setSelectBranch(data[0]);
+      console.log("selectedBranch", data[0]);
     }
     setAfm(selectedBranch.afm);
     console.log("handleSelectBranch", data);
@@ -264,9 +265,9 @@ export const NewOrder = () => {
 
   }
 
-  const handleGetBranches = async (event,value) => {
-    console.log("event", event);  
-    const data: IGetBranchesResponse[] = await searchBranches(value); 
+  const handleGetBranches = async (event, value) => {
+    console.log("event", event);
+    const data: IGetBranchesResponse[] = await searchBranches(value);
     setBranches(data);
   };
 
@@ -277,23 +278,30 @@ export const NewOrder = () => {
         <Grid item xs={12}>
           <Typography className={classes.title}>ΝΕΑ ΠΑΡΑΓΓΕΛΙΑ</Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Autocomplete
-                style={{ width: 350, maxWidth: "100%" }}
-                options={branches} 
-                getOptionLabel={(option:IGetBranchesResponse) => option.trdrname}
-                renderInput={(params) => <TextField {...params} label="Επιλογή Πελάτη" />}
-                onChange={handleSelectBranch}
-                onInputChange={handleGetBranches}
-              />
+        {isEmployee && (
+          <Grid item xs={12}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <Autocomplete
+                  style={{ width: 350, maxWidth: "100%" }}
+                  options={branches}
+                  getOptionLabel={(option: IGetBranchesResponse) => option.trdrname}
+                  renderInput={(params) => <TextField {...params} label="Επιλογή Πελάτη" />}
+                  onChange={handleSelectBranch}
+                  onInputChange={handleGetBranches}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>  {/* Επιλογή Τρόπου Πληρωμής */}
+
+                {selectedBranch.warning}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
         <Grid item xs={12}>
-        
-        <OrderOptions isDisabled={rows.length > 0} />
+
+          <OrderOptions isDisabled={rows.length > 0} />
 
         </Grid>
         <Grid item lg={12} sm={12} className={classes.table}>
