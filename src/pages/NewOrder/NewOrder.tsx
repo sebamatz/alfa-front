@@ -282,7 +282,7 @@ export const NewOrder = () => {
                   onChange={handleSelectBranch}
                   onInputChange={handleGetBranches}
                 />
-                <div style={{ color: "red",paddingTop: "10px" }}>{selectedBranch?.warning}</div>
+                <div style={{ color: "red",paddingTop: "10px" }}>{customer?.warning}</div>
                 </Box>
               </Grid>
             </Grid>
