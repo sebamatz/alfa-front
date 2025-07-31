@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Orders = ({ afm }: any) => {
+export const Orders = () => {
   const defaultData = {
     Company: 10, 
     SearchValue: null,
@@ -54,10 +54,9 @@ export const Orders = ({ afm }: any) => {
     TakeRecs: null,
     Id: null,
     LastId: null,
-    AFM: afm,
   };
 
-  const { selectedBranch, branch } = useContext(BranchesContext);
+  const { selectedBranch,  customer} = useContext(BranchesContext); 
   const classes = useStyles();
   const [value, setValue] = useState(PENDING);
   const [orderDetails, setDetails] = useState([]);
@@ -116,17 +115,17 @@ export const Orders = ({ afm }: any) => {
   };
 
   useEffect(() => {
-    if (afm && branch.length === 1) {
-      getOrders({ ...query, AFM: afm });
+    if (customer?.afm && customer?.branches.length === 1) {
+      getOrders({ ...query, AFM: customer?.afm });
     }
-    if (selectedBranch.trdbranch) {
+    if (selectedBranch?.trdbranch) {
       getOrders({
         ...query,
-        AFM: afm,
-        TrdrBranch: selectedBranch.trdbranch,
+        AFM: customer?.afm,
+        TrdrBranch: selectedBranch?.trdbranch,
       });
     }
-  }, [afm, query, selectedBranch, branch]);
+  }, [customer?.afm, query, selectedBranch, customer?.branches.length]);
 
   return (
     <Grid container spacing={3} justifyContent="center">
@@ -137,7 +136,7 @@ export const Orders = ({ afm }: any) => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={3} justifyContent="center">
-          <Grid item>{branch.length > 1 && <Branches />}</Grid>
+          <Grid item>{customer?.branches.length > 1 && <Branches />}</Grid>
         </Grid>
         <Grid container spacing={3} justifyContent="center">
           <Grid item>

@@ -240,7 +240,21 @@ export default function DataTable(props: TableProps) {
                               : "XRWMA.jpg";
                         }
 
-                        return <TableCell key={i}>{data}</TableCell>;
+                        // Handle different data types to prevent React rendering errors
+                        let displayData: React.ReactNode = data;
+                        
+                        if (data === null || data === undefined) {
+                          displayData = '';
+                        } else if (typeof data === 'object') {
+                          // If data is an object, try to convert it to a string representation
+                          displayData = [data];
+                        } else if (typeof data === 'boolean') {
+                          displayData = data ? 'Yes' : 'No';
+                        } else {
+                          displayData = String(data);
+                        }
+
+                        return <TableCell key={i}>{displayData}</TableCell>;
                       })}
                       {name === "master" && (
                         <TableCell style={{ padding: "0px" }}>

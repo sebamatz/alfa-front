@@ -8,7 +8,8 @@ import "./App.css";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 import { getbranches } from "./api/fetch";
-import { BranchesContext } from "./context/BranchesContext";
+import { BranchesContextProvider } from "./context/BranchesContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const theme = createTheme({
   palette: {
@@ -28,101 +29,34 @@ const theme = createTheme({
 });
 
 function App() {
-  const [afm, setAfm] = useState(null);
-  const [branch, setBranch] = useState([]);
-  const [selectedBranch, setSelectBranch] = useState({});
-  const [isEmployee, setIsEmployee] = useState(undefined);
-
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  // useEffect(() => {
-
-  //   console.log("here");
-  //   const afmValue: any = document.getElementById("userAfm");
-  //   if (afmValue) {
-  //     getbranches(afmValue.value).then((data: any) => {
-  //       setBranch(data);
-  //       if (data?.length === 1) {
-  //         setSelectBranch(data[0]);
-  //       }
-  //       setAfm(afmValue.value);
-  //     });
-  //   }
-  // }, [afm]);
-
-  useEffect(() => {
-    if (isEmployee) {
-      setAfm(null);
-      setBranch([]);
-      setSelectBranch({});
-    }
-  }, [isEmployee]);
-
-  useEffect(() => {
-    const handleMessage = (event) => {
-      // Optional: validate event.origin for security
-      // if (event.origin !== 'https://your-parent-domain.com') return;
-
-      const { userAfm }: { userAfm: string } = event.data;
-
-      // check if userAfm is a start with 7 sevens 
-
-      
-      
-
-      if (userAfm) {
-        setIsEmployee(userAfm?.startsWith("7777777"));
-        if(isEmployee!==undefined){
-        getbranches(userAfm).then((data: any) => {
-          console.log("data", data);
-          setBranch(data[0].branches);
-          if (data[0].branches?.length === 1) {
-            setSelectBranch(data[0].branches[0]);
-          }
-            setAfm(userAfm);
-          });
-        }
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, [isEmployee]);
-
-  console.log("branch", branch);
 
   return (
-    <ThemeProvider theme={theme}>
-      <BranchesContext.Provider
-        value={{ branch, setBranch, selectedBranch, 
-          setSelectBranch, isEmployee, afm, setAfm, setIsEmployee }}
-      >
-        {/* <CompanyOptions /> */}
-        <div className="App">
-          <Router>
-            <Switch>
-              <Route exact path="/">
-                <Dashboard />
-              </Route>
-              <Route exact path="/erp-test">
-                <Dashboard />
-              </Route>
-              <Route path="/orders">
-                <Orders afm={afm} />
-              </Route>
-              <Route path="/new">
-                <NewOrder />
-              </Route>
-            </Switch>
-          </Router>
-        </div>
-      </BranchesContext.Provider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <BranchesContextProvider 
+        >
+          {/* <CompanyOptions /> */}
+          <div className="App">
+            <Router>
+              <Switch>
+                <Route exact path="/">
+                  <Dashboard />
+                </Route>
+                <Route exact path="/erp-test">
+                  <Dashboard />
+                </Route>
+                <Route path="/orders">
+                  <Orders />
+                </Route>
+                <Route path="/new">
+                  <NewOrder />
+                </Route>
+              </Switch>
+            </Router>
+          </div>
+        </BranchesContextProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

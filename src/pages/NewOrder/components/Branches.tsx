@@ -6,13 +6,13 @@ import { IBranch } from "../../../api/types";
 interface Props {}
 
 export default function Branches({}: Props): ReactElement {
-  const { branch, selectedBranch, setSelectBranch } =
+  const { customer, selectedBranch, setSelectedBranch } = 
     useContext(BranchesContext);
 
   const handleSelectBranch = (e: any) => {
     let val = e.target.value;
-    const selected = branch.find((data: IBranch) => data.branchcode === val);
-    setSelectBranch(selected);
+    const selected = customer.branches.find((data: IBranch) => data.branchcode === val);
+    setSelectedBranch(selected);
   };
 
   return (
@@ -20,14 +20,14 @@ export default function Branches({}: Props): ReactElement {
       <InputLabel className="branch" id="demo-simple-select-label">
         ΚΑΤΑΣΤΗΜΑ
       </InputLabel>
-      {branch.length > 0 && (
+      {customer?.branches.length > 0 && (
         <Select
           onChange={handleSelectBranch}
           name="fincode"
           value={selectedBranch?.branchcode}
         >
-          {branch.map((v: IBranch, i) => ( 
-            <MenuItem value={v.branchcode}>{v.address}</MenuItem>
+          {customer?.branches.map((v: IBranch, i) => ( 
+            <MenuItem key={i} value={v.branchcode}>{v.address}</MenuItem>
           ))}
         </Select>
       )}

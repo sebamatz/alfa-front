@@ -56,8 +56,7 @@ const defaultValues: any = {
 
 export const NewOrder = () => {
   let history = useHistory();
-  const { selectedBranch, branch, setSelectBranch,
-    setAfm, setBranch, isEmployee } =
+  const { selectedBranch, setCustomer, customer, isEmployee } =
     useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
@@ -83,9 +82,7 @@ export const NewOrder = () => {
     setRemarkValue(event.target.value);
   };
 
-  useEffect(() => {
-    if (branch.length > 1) setSelectBranch({});
-  }, []);
+
 
   const getSelection = useCallback(
     (selectionData) => {
@@ -202,9 +199,8 @@ export const NewOrder = () => {
       return {
         company: 10,
         boption: orderColor,
-        trdr: selectedBranch.trdr,
-        trdbranch:
-          selectedBranch.trdbranch === 0 ? null : selectedBranch.trdbranch,
+        trdr: customer.trdr,
+        trdbranch: selectedBranch?.trdbranch,
         comments:
           colorValue && typeof colorValue === "object"
             ? colorValue.sku
@@ -247,22 +243,17 @@ export const NewOrder = () => {
     setColorCompany,
   };
 
-  console.log("stateData", stateData);
 
   const handleSelectBranch = async (event, value) => {
     const selectedBranch: IGetBranchesResponse = branches.find((branch: IGetBranchesResponse) => branch?.afm === value?.afm);
     console.log("event", event);
-    const data: IGetBranchesResponse[] = await getbranches(selectedBranch?.afm);
-    if (data[0]?.branches.length > 0) {
-      setBranch(data[0].branches);
-    } else {
-      setSelectBranch(data[0]);
-      console.log("selectedBranch", data[0]);
+    let data: IGetBranchesResponse[] = [];
+    try {
+      const data = await getbranches(selectedBranch?.afm);
+      setCustomer(data[0]);
+    } catch (error) {
+      console.log("error", error);
     }
-    setAfm(selectedBranch.afm);
-    console.log("handleSelectBranch", data);
-
-
   }
 
   const handleGetBranches = async (event, value) => {
@@ -291,7 +282,7 @@ export const NewOrder = () => {
                   onChange={handleSelectBranch}
                   onInputChange={handleGetBranches}
                 />
-                <div style={{ color: "red",paddingTop: "10px" }}>{selectedBranch.warning}</div>
+                <div style={{ color: "red",paddingTop: "10px" }}>{selectedBranch?.warning}</div>
                 </Box>
               </Grid>
             </Grid>
@@ -335,12 +326,11 @@ export const NewOrder = () => {
               <>
                 <Grid item xs={12} justifyContent="center">
                   <div style={{ textAlign: "center" }}>
-                    {branch.length > 1 && <Branches />}
+                    {customer?.branches.length > 1 && <Branches />}
                   </div>
                 </Grid>
                 <Grid item xs={12} justifyContent="center">
-                  {console.log("selectedBranch", branch)}
-                  {selectedBranch && (
+                  {(selectedBranch || customer?.branches.length === 0) && (
                     <div style={{ textAlign: "center" }}>
                       <Button
                         variant="contained"
