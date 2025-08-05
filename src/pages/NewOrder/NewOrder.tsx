@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useContext } from "react";
+import { useState, useCallback, useEffect, useContext, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 
 import { NewOrderContext } from "./NewOrderContext";
@@ -120,9 +120,11 @@ export const NewOrder = () => {
 
   const setWeight = useCallback(
     (selectionData) => {
-      const kg = (
-        parseFloat(selectionData) * parseFloat(selectedInfo.data.qtY1Def)
-      ).toFixed(2);
+      // Use precise calculation to avoid floating-point errors
+      const selectionValue = parseFloat(selectionData) || 0;
+      const qtY1DefValue = parseFloat(selectedInfo.data.qtY1Def) || 0;
+      const kg = selectionValue * qtY1DefValue;
+      
       // eslint-disable-next-line no-new-wrappers
       const newNum = new Number(kg);
       const num = newNum.toLocaleString("el-GR");
@@ -172,12 +174,23 @@ export const NewOrder = () => {
       data: { ...selectedInfo.data, fincode: val },
     });
   };
+
+  const totalWeight = rows.reduce((acc, row) => {
+    // Use qt1converted for precise calculation (raw numeric value)
+    const weight = parseFloat(row.qt1converted) || 0;
+    return acc + weight;
+  }, 0);
+  const totalItems = rows.reduce((acc, row) => {
+    const items = parseFloat(row.qtY2) || 0;
+    return acc + items;
+  }, 0);
+
   const headCellsDetails: any = [
     { id: "fincode", numeric: false, label: "ΟΜΑΔΑ" },
     { id: "sku", numeric: false, label: "ΚΩΔΙΚΟΣ" },
     { id: "mtrlname", numeric: false, label: "ΠΕΡΙΓΡΑΦΗ" },
-    { id: "qtY2", numeric: true, label: "ΒΕΡΓΕΣ" },
-    { id: "qtY1", numeric: true, label: "ΚΙΛΑ" },
+    { id: "qtY2", numeric: true, label: `ΒΕΡΓΕΣ (${totalItems})` }, 
+    { id: "qtY1", numeric: true, label: `ΚΙΛΑ (${totalWeight})` },
     { id: "xdocname", numeric: false, label: "ΤΟΜΗ" },
     { id: "commentS1", numeric: false, label: "ΠΑΡΑΤΗΡΗΣΕΙΣ" },
     { id: "action", numeric: false, label: "" },
