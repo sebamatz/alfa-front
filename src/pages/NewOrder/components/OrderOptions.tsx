@@ -62,7 +62,7 @@ const OrderOptions = ({ isDisabled }: Props) => {
     const v = (event.target as HTMLInputElement).value;
     // setValue(v);
     setSelectedTrdpgroup(null);
-    setColorValue("");
+    setColorValue(null);
     setSelectedColorCompany(null);
     setOrderColor(v);
     setFinCode(selectedInfo.data.fincode);
