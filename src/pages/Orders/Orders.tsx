@@ -115,7 +115,7 @@ export const Orders = () => {
   };
 
   useEffect(() => {
-    if (customer?.afm && customer?.branches.length === 1) {
+    if (customer?.afm ) {
       getOrders({ ...query, AFM: customer?.afm });
     }
     if (selectedBranch?.trdbranch) {

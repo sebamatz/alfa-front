@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -73,10 +73,18 @@ const DatePickers = ({ getDateFrom, getDateTo, getSearchData }: Props) => {
   const [text, setText] = useState("");
 
   // The first commit of Material-UI
-  const [selectedDateFrom, setSelectedDateFrom] = useState<Date | null>(
-    new Date()
-  );
-  const [selectedDateTo, setSelectedDateTo] = useState<Date | null>(new Date());
+  const [selectedDateFrom, setSelectedDateFrom] = useState<Date | null>(null);
+  const [selectedDateTo, setSelectedDateTo] = useState<Date | null>(null);
+  
+  // Set default dates to today when component mounts
+  useEffect(() => {
+    const today = new Date();
+    setSelectedDateFrom(today);
+    setSelectedDateTo(today);
+    getDateFrom(today);
+    getDateTo(today);
+  }, []);
+
   const handleDateChangeFrom = (date: Date | null) => {
     setSelectedDateFrom(date);
     getDateFrom(date);
