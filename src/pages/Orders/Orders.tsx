@@ -11,9 +11,10 @@ import Branches from "../NewOrder/components/Branches";
 
 import { BranchesContext } from "../../context/BranchesContext";
 
-import { Typography } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import BackToMenu from "../../components/BackToMenu";
 import { fechOrders, downloadPdf } from "../../api/fetch";
+import { CustomerDrodown } from "../../components/CustomerDrodown";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,6 +67,8 @@ export const Orders = () => {
   const [dateFrom, setDateFrom] = useState<Date | null>(null);
   const [dateto, setDateTo] = useState<Date | null>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const master = Object.keys(orders).map((key) => {
     return orders[key][0];
   });
@@ -110,21 +113,25 @@ export const Orders = () => {
   ];
 
   const getOrders = async (data) => {
+    setIsLoading(true);
     const orders: any = await fechOrders(data);
     setOrders(orders);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     if (customer?.afm ) {
-      getOrders({ ...query, AFM: customer?.afm });
+      if (selectedBranch?.trdbranch) {
+        getOrders({
+          ...query,
+          AFM: customer?.afm,
+          TrdrBranch: selectedBranch?.trdbranch,
+        });
+      }else{
+        getOrders({ ...query, AFM: customer?.afm });
+      }
     }
-    if (selectedBranch?.trdbranch) {
-      getOrders({
-        ...query,
-        AFM: customer?.afm,
-        TrdrBranch: selectedBranch?.trdbranch,
-      });
-    }
+  
   }, [customer?.afm, query, selectedBranch, customer?.branches.length]);
 
   return (
@@ -133,6 +140,7 @@ export const Orders = () => {
 
       <Grid item xs={12}>
         <Typography className={classes.title}>ΑΝΑΖΗΤΗΣΗ ΠΑΡΑΓΓΕΛΙΑΣ</Typography>
+        <CustomerDrodown />
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={3} justifyContent="center">
@@ -155,6 +163,8 @@ export const Orders = () => {
       </Grid>
       <Grid item lg={6} sm={12} className={classes.table}>
         <div className={classes.table_wrapper}>
+          {isLoading && <CircularProgress />}
+          {!isLoading && (
           <DataTable
             name="master"
             onRowclick={getDetails}
@@ -164,7 +174,8 @@ export const Orders = () => {
             selectedRow={orderDetails[0]}
             getPdf={downloadPdf}
             // pagination={false}
-          />
+          />)} 
+          
         </div>
       </Grid>
       <Grid item xs={6} />

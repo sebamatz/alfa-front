@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getbranches } from "../api/fetch";
+import { IGetBranchesResponse } from "../api/types";
 export interface IAppProps { }
 export const defaultValues: any = {};
 export const BranchesContext = createContext(defaultValues);
@@ -9,6 +10,7 @@ export const BranchesContextProvider = ({ children }) => {
     const [customer, setCustomer] = useState(null);
     const [selectedBranch, setSelectedBranch] = useState(null);
     const [isEmployee, setIsEmployee] = useState(undefined);
+    const [branches, setBranches] = useState<IGetBranchesResponse[]>([]);
   
   
     useEffect(() => {
@@ -26,10 +28,10 @@ export const BranchesContextProvider = ({ children }) => {
           if (userAfm) {
             if(userAfm?.startsWith("7777777")){
               setIsEmployee(true);
-            }else{
-              const data = await getbranches(userAfm);
-              setCustomer(data[0]);
             }
+              const data = await getbranches(userAfm);
+            setCustomer(data[0]);
+            
         }
        
       };
@@ -44,7 +46,7 @@ export const BranchesContextProvider = ({ children }) => {
 
 
     useEffect(() => {
-        if(customer && customer.branches.length === 1){
+        if(customer && customer.branches.length > 0){
             setSelectedBranch(customer.branches[0]);
         }
     }, [customer]);
@@ -57,6 +59,8 @@ export const BranchesContextProvider = ({ children }) => {
       setIsEmployee,
       selectedBranch,
       setSelectedBranch,
+      branches,
+      setBranches,
     }
   
     console.log("BranchesContext", stateData);

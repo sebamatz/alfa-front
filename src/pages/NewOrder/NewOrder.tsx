@@ -15,8 +15,8 @@ import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
 import OrderDialog from "./Dialog";
 import { domain } from "../../config";
-import { Autocomplete } from "@material-ui/lab";
-import { IBranch, IGetBranchesResponse } from "../../api/types";
+import { IGetBranchesResponse } from "../../api/types";
+import { CustomerDrodown } from "../../components/CustomerDrodown";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,7 +56,7 @@ const defaultValues: any = {
 
 export const NewOrder = () => {
   let history = useHistory();
-  const { selectedBranch, setCustomer, customer, isEmployee } =
+  const { selectedBranch, setCustomer, customer, isEmployee,branches,setBranches } =
     useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
@@ -76,7 +76,6 @@ export const NewOrder = () => {
   const [colorCompany, setColorCompany] = useState([]);
   const [selectedColorCompany, setSelectedColorCompany] = useState(null);
   const [selectedTrdpgroup, setSelectedTrdpgroup] = useState(null);
-  const [branches, setBranches] = useState<IGetBranchesResponse[]>([]);
 
   const handleChangeRemark = (event) => {
     setRemarkValue(event.target.value);
@@ -286,17 +285,12 @@ export const NewOrder = () => {
           <Grid item xs={12}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
+                {isEmployee && (
                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "start"}}>
-                <Autocomplete
-                  style={{ width: 350, maxWidth: "100%" }}
-                  options={branches}
-                  getOptionLabel={(option: IGetBranchesResponse) => option.trdrname}
-                  renderInput={(params) => <TextField {...params} label="Επιλογή Πελάτη" />}
-                  onChange={handleSelectBranch}
-                  onInputChange={handleGetBranches}
-                />
-                <div style={{ color: "red",paddingTop: "10px" }}>{customer?.warning}</div>
+                <CustomerDrodown />
+
                 </Box>
+                )}
               </Grid>
             </Grid>
           </Grid>
