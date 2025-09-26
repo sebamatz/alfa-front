@@ -2,19 +2,17 @@ import { useCallback, useContext } from "react";
 import { useEffect, useState } from "react";
 import { NewOrderContext } from "../NewOrderContext";
 import { getItems } from "../../../api/fetch";
-import { Search } from "lucide-react";
-import { company } from "../../../config";
-
-// shadcn/ui components
 import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../components/ui/select";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+  TextField,
+} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { company } from "../../../config";
 
 interface IColorData {
   ccCPOUDRAID: number;
@@ -56,27 +54,34 @@ export default function ColorSelections() {
   };
 
   const handleChangeColorType = useCallback(
-    (value: string) => {
+    (event: React.ChangeEvent<{ value: unknown }>) => {
       //reset all values
       setColorValue(null);
       setSelectedManifacturer("");
       setManifacturer([]);
-      setColorType(value);
+      setColorType(event.target.value as string);
     },
     [setColorType, setColorValue, setSelectedManifacturer, setManifacturer]
   );
 
   const handleChangeManifacturer = useCallback(
-    (value: string) => {
+    (event: React.ChangeEvent<{ value: unknown }>) => {
       setColorValue(null);
-      setSelectedManifacturer(value);
+      setSelectedManifacturer(event.target.value as string);
     },
     [setColorValue]
   );
 
   const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setColorValue(event.target.value);
+    (event: React.SyntheticEvent, newInputValue: string) => {
+      setColorValue(newInputValue);
+    },
+    [setColorValue]
+  );
+
+  const handleChangeColor = useCallback(
+    (event: any, newValue: any | string | null) => {
+      setColorValue(newValue ?? "");
     },
     [setColorValue]
   );
@@ -114,89 +119,104 @@ export default function ColorSelections() {
   }, [selectedManifacturer, handleGetColor, colorType]);
 
   return (
-    <div className="flex flex-wrap gap-4">
-      {/* Color Type Selection */}
-      <div className="flex flex-col space-y-2 w-full max-w-xs">
-        <Label htmlFor="color-type">Τύπος Χρώματος</Label>
-        <Select value={colorType || ""} onValueChange={handleChangeColorType}>
-          <SelectTrigger id="color-type">
-            <SelectValue placeholder="Επιλέξτε τύπο χρώματος" />
-          </SelectTrigger>
-          <SelectContent>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={3}>
+        <FormControl fullWidth style={{ maxWidth: 300 }}>
+          <InputLabel id="demo-simple-select-label">Τύπος Χρώματος</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={colorType}
+            label="Age"
+            onChange={handleChangeColorType}
+          >
             {colorTypes.map((colorType) => (
-              <SelectItem key={colorType.id} value={colorType.id.toString()}>
+              <MenuItem key={colorType.id} value={colorType.id}>
                 {colorType.name}
-              </SelectItem>
+              </MenuItem>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Conditional rendering based on color type */}
-      {colorType === "3" ? (
-        /* Direct color input for type 3 */
-        <div className="flex items-end space-x-2">
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="color-input">Κωδικός</Label>
-            <Input
-              id="color-input"
-              placeholder="Κωδικός..."
-              value={colorValue || ""}
-              onChange={handleInputChange}
-              className="w-48"
-            />
-          </div>
-          <Search className="h-5 w-5 text-gray-500 mb-2" />
-        </div>
+          </Select>
+        </FormControl>
+      </Grid>
+      {colorType === 3 ? (
+        <Grid item>
+          <Grid container spacing={3} alignItems="flex-end">
+            <Grid item>
+              <TextField
+                id="input-with-icon-grid"
+                onChange={(e) => handleChangeColor(e, e.target.value)}
+                label="Κωδικός..."
+                disabled={false}
+                value={colorValue}
+              />
+            </Grid>
+            <Grid item>
+              <SearchIcon />
+            </Grid>
+          </Grid>
+        </Grid>
       ) : (
-        /* Manufacturer selection for other types */
-        colorType && (
-          <div className="flex flex-col space-y-2 w-full max-w-xs">
-            <Label htmlFor="manufacturer">Επιλογή Κατασκευαστή</Label>
-            <Select 
-              value={selectedManifacturer || ""} 
-              onValueChange={handleChangeManifacturer}
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth style={{ maxWidth: 300 }}>
+            <InputLabel id="demo-simple-select-label">
+              Επιλογή Κατασκευαστή
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-manifacturer-label"
+              id="demo-simple-select-manifacturer"
+              value={selectedManifacturer}
+              label="Επιλογή Κατασκευαστή 40"
+              onChange={handleChangeManifacturer}
             >
-              <SelectTrigger id="manufacturer">
-                <SelectValue placeholder="Επιλέξτε κατασκευαστή" />
-              </SelectTrigger>
-              <SelectContent>
-                {manifacturer.map((manufacturer: { trdr: number; name: string }) => (
-                  <SelectItem key={manufacturer.trdr} value={manufacturer.trdr.toString()}>
-                    {manufacturer.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              {manifacturer.map(
+                (manifacturer: { trdr: number; name: string }) => (
+                  <MenuItem key={manifacturer.trdr} value={manifacturer.trdr}>
+                    {manifacturer.name}
+                  </MenuItem>
+                )
+              )}
             </Select>
-          </div>
-        )
+          </FormControl>
+        </Grid>
       )}
-
-      {/* Color data selection - only show when manufacturer is selected */}
-      {selectedManifacturer && colorType !== "3" && (
-        <div className="flex items-end space-x-2">
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="color-search">Αναζήτηση Χρώματος</Label>
-            <select 
-              id="color-search"
-              className="flex h-10 w-48 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              value={colorValue?.sku || ""}
-              onChange={(e) => {
-                const selectedColor = colorData.find(color => color.sku === e.target.value);
-                setColorValue(selectedColor || e.target.value);
-              }}
-            >
-              <option value="">Επιλέξτε χρώμα...</option>
-              {colorData.map((color) => (
-                <option key={color.ccCPOUDRAID} value={color.sku}>
-                  {color.sku}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Search className="h-5 w-5 text-gray-500 mb-2" />
-        </div>
+      {selectedManifacturer && (
+        <Grid item xs={12} md={3}>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={12} alignItems="center">
+              <Autocomplete
+                style={{ maxWidth: 300 }}
+                freeSolo
+                value={colorValue?.value ?? ""}
+                onChange={handleChangeColor}
+                onInputChange={handleInputChange}
+                options={colorData}
+                getOptionLabel={(option) =>
+                  typeof option === "string" ? option : option.sku
+                }
+                renderInput={(params) => (
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="space-between"
+                    direction="row"
+                  >
+                    <Grid item xs={12} md={10}>
+                      <Grid container alignItems="flex-end">
+                        <Grid item xs={10}>
+                          <TextField fullWidth {...params} label="Κωδικός..." />
+                        </Grid>
+                        <Grid item>
+                          <SearchIcon />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
       )}
-    </div>
+    </Grid>
   );
 }
