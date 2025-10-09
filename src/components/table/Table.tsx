@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,6 +18,7 @@ import { HeadCell, Data } from "../../types";
 import { AnyTxtRecord } from "dns";
 import { Button } from "@material-ui/core";
 import { SignalCellularConnectedNoInternet0BarTwoTone } from "@material-ui/icons";
+import { NewOrderContext } from "../../pages/NewOrder/NewOrderContext";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -124,6 +125,8 @@ export default function DataTable(props: TableProps) {
   const [addRow, setAddwRow] = useState(false);
   // const [status, setStatus] = useState(null);
 
+  const { orderColor, colorValue } = useContext(NewOrderContext);
+
   let status = null;
 
   const handleRequestSort = (
@@ -135,6 +138,9 @@ export default function DataTable(props: TableProps) {
     setOrderBy(property);
   };
   const handleAddRowClick = (event: React.MouseEvent<unknown>) => {
+    if (orderColor === "3" && !colorValue && !addRow) {
+      return alert("Πρέπει να επιλέξετε κωδικό χρώματος");
+    }
     event.preventDefault();
     setAddwRow(!addRow);
   };
@@ -242,14 +248,14 @@ export default function DataTable(props: TableProps) {
 
                         // Handle different data types to prevent React rendering errors
                         let displayData: React.ReactNode = data;
-                        
+
                         if (data === null || data === undefined) {
-                          displayData = '';
-                        } else if (typeof data === 'object') {
+                          displayData = "";
+                        } else if (typeof data === "object") {
                           // If data is an object, try to convert it to a string representation
                           displayData = [data];
-                        } else if (typeof data === 'boolean') {
-                          displayData = data ? 'Yes' : 'No';
+                        } else if (typeof data === "boolean") {
+                          displayData = data ? "Yes" : "No";
                         } else {
                           displayData = String(data);
                         }

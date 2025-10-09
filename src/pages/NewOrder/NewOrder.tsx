@@ -274,6 +274,7 @@ export const NewOrder = () => {
     setBranches(data);
   };
 
+  console.log("stateData", stateData);
   return (
     <NewOrderContext.Provider value={stateData}>
       <Grid container spacing={3} justifyContent="center">
