@@ -106,7 +106,7 @@ export default function Asynchronous() {
           setOpen(false);
         }}
         onChange={(e, v) => {
-          if(v.data.mtrgroup===11018){
+          if(v?.data?.mtrgroup===11018){
             alert(v.data.name);
             handleSetSelectedValue("");
             return;
