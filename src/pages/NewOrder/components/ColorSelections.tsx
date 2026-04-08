@@ -1,5 +1,4 @@
-import { useCallback, useContext } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { NewOrderContext } from "../NewOrderContext";
 import { getItems } from "../../../api/fetch";
 import {
@@ -19,6 +18,9 @@ interface IColorData {
   sku: string;
 }
 
+const asArray = <T,>(value: unknown): T[] =>
+  Array.isArray(value) ? (value as T[]) : [];
+
 export default function ColorSelections() {
   const { setColorValue, colorValue } = useContext(NewOrderContext);
 
@@ -30,24 +32,26 @@ export default function ColorSelections() {
 
   const handleGetCollorData = async (boption: number) => {
     switch (boption) {
-      case 30:
+      case 30: {
         const data30 = await getItems({ BOption: 30, Company: company });
         setColorTypes(
-          data30.map((item: { id: number; name: string }) => ({
+          asArray<{ id: number; name: string }>(data30).map((item) => ({
             id: item.id,
             name: item.name,
           }))
         );
         break;
-      case 40:
+      }
+      case 40: {
         const data40 = await getItems({ BOption: 40, Company: company });
         setManifacturer(
-          data40.map((item: { id: number; code: string }) => ({
+          asArray<{ id: number; code: string }>(data40).map((item) => ({
             trdr: item.id,
             name: item.code,
           }))
         );
         break;
+      }
       default:
         break;
     }
@@ -80,7 +84,7 @@ export default function ColorSelections() {
   );
 
   const handleChangeColor = useCallback(
-    (event: any, newValue: any | string | null) => {
+    (event: React.SyntheticEvent, newValue: IColorData | string | null) => {
       setColorValue(newValue ?? "");
     },
     [setColorValue]
@@ -96,7 +100,7 @@ export default function ColorSelections() {
       SearchValue: colorValue,
     });
     //[{"ccCPOUDRAID":15606,"sku":"SE802G-MATT-1002"}]
-    setColorData(data);
+    setColorData(asArray<IColorData>(data));
   }, [colorType, colorValue, selectedManifacturer]);
 
   useEffect(() => {
@@ -104,12 +108,11 @@ export default function ColorSelections() {
   }, []);
 
   useEffect(() => {
-    if (colorType === "3") {
+    if (Number(colorType) === 3) {
       handleGetCollorData(50);
       return;
-    } else {
-      handleGetCollorData(40);
     }
+    handleGetCollorData(40);
   }, [colorType]);
 
   useEffect(() => {
@@ -138,7 +141,7 @@ export default function ColorSelections() {
           </Select>
         </FormControl>
       </Grid>
-      {colorType === 3 ? (
+      {Number(colorType) === 3 ? (
         <Grid item>
           <Grid container spacing={3} alignItems="flex-end">
             <Grid item>
@@ -186,10 +189,10 @@ export default function ColorSelections() {
               <Autocomplete
                 style={{ maxWidth: 300 }}
                 freeSolo
-                value={colorValue?.value ?? ""}
+                value={colorValue ?? ""}
                 onChange={handleChangeColor}
                 onInputChange={handleInputChange}
-                options={colorData}
+                options={asArray<IColorData>(colorData)}
                 getOptionLabel={(option) =>
                   typeof option === "string" ? option : option.sku
                 }
