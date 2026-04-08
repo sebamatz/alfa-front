@@ -55,7 +55,7 @@ export const NewRow = ({ saveOrder }: Props) => {
     //sets default value
     setGroup(groups[0].name);
     setFinCode(groups[0].name);
-  }, []);
+  }, [setFinCode]);
 
   useEffect(() => {
     getGroups();
@@ -78,7 +78,7 @@ export const NewRow = ({ saveOrder }: Props) => {
     if (qtY2 === "1") {
       setWeight(qtY2);
     }
-  }, [qtY2]);
+  }, [qtY2, setWeight]);
 
   return (
     <TableRow>

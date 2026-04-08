@@ -1,36 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  FormControl,
-  RadioGroup,
-  FormControlLabel,
-  withStyles,
-  Grid,
-  createStyles,
-  makeStyles,
-  Theme,
-  TextField,
-} from "@material-ui/core";
+import React, { useContext } from "react";
+import { FormControl, RadioGroup, FormControlLabel, withStyles, Grid, TextField } from "@material-ui/core";
 import Radio, { RadioProps } from "@material-ui/core/Radio";
 import SearchIcon from "@material-ui/icons/Search";
 
 import { profilColors } from "../../../constants";
 import { NewOrderContext } from "../NewOrderContext";
-import Autocomplete from "../../../components/AutoComplete";
-import { getItems } from "../../../api/fetch";
 import ColorSelections from "./ColorSelections";
 import ColorCompany from "./ColorCompany";
 
 type Props = {
   isDisabled: boolean;
 };
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    radios: {
-      textAlign: "left",
-    },
-  })
-);
-
 const GreenRadio = withStyles(({ palette }) => ({
   root: {
     color: palette.primary.main,
@@ -55,7 +35,6 @@ const OrderOptions = ({ isDisabled }: Props) => {
     selectedTrdpgroup,
     setSelectedTrdpgroup,
   } = useContext(NewOrderContext);
-  const { comments } = selectedInfo.data;
 
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
     actions.resetSelection();
@@ -72,9 +51,6 @@ const OrderOptions = ({ isDisabled }: Props) => {
     const c = (event.target as HTMLInputElement).value;
     setColorValue(c);
   };
-
-  const afmValue = (document.getElementById("userAfm") as HTMLInputElement)
-    ?.value;
 
   // const handleGetCollorType = async () => {
   //   const data = await getItems({ BOption: 40, Company: 1, AFM: "" });
