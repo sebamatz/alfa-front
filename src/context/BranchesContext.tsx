@@ -21,8 +21,6 @@ export const BranchesContextProvider = ({ children }) => {
     const handleMessage = async (event) => {
       // Optional: validate event.origin for security
       // if (event.origin !== 'https://your-parent-domain.com') return;
-      setIsEmployee(true);
-      return;
       const { userAfm }: { userAfm: string } = event.data;
       if (userAfm) {
         if (userAfm?.startsWith("7777777")) {
