@@ -88,7 +88,7 @@ export const NewRow = ({ saveOrder }: Props) => {
           {groups.length > 0 && (
             <Select onChange={handleSelectFincode} name="fincode" value={group}>
               {groups.map((v: any, i) => (
-                <MenuItem key={i} value={v.name}>
+                <MenuItem key={`${v.name}-${i}`} value={v.name}>
                   {v.name}
                 </MenuItem>
               ))}

@@ -1,7 +1,15 @@
-import { useEffect, useCallback } from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
-import { useContext } from "react";
+import {
+  useEffect,
+  useCallback,
+  useContext,
+} from "react"; /* eslint-disable react-hooks/exhaustive-deps */
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+} from "@material-ui/core";
 import { NewOrderContext } from "../NewOrderContext";
 import { getItems } from "../../../api/fetch";
 
@@ -21,15 +29,15 @@ export default function ColorCompany() {
         trdr: item.trdr,
         name: item.name,
         trdpgroup: item.trdpgroup,
-      }))
+      })),
     );
   }, [setColorCompany]);
 
   const handleChangeCompany = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const company = colorCompany.find(
-      (company: { trdr: number }) => company.trdr === event.target.value
+      (company: { trdr: number }) => company.trdr === event.target.value,
     );
     setSelectedColorCompany(company?.trdr);
     setSelectedTrdpgroup(company?.trdpgroup);

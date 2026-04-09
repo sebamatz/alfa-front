@@ -2,8 +2,9 @@
 import { domain } from "../config";
 import { Fragment, useContext, useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { createFilterOptions } from "@material-ui/lab/Autocomplete";
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { getData } from "../api/fetch";
 import { NewOrderContext } from "../pages/NewOrder/NewOrderContext";
@@ -66,7 +67,7 @@ export default function Asynchronous() {
         });
 
         if (active) {
-          setOptions(list ? list : []);
+          setOptions(list || []);
           setLoading(false);
         }
       }
@@ -94,59 +95,55 @@ export default function Asynchronous() {
     stringify: (option: any) => option.value,
   });
   return (
-    <>
-      <Autocomplete
-        filterOptions={filterOptions}
-        id="asynchronous-demo"
-        style={{ width: 300 }}
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        onChange={(e, v) => {
-          if (v?.data?.mtrgroup === 11018) {
-            alert(v.data.name);
-            handleSetSelectedValue("");
-            return;
-          }
-          if (v) {
-            const selectedData = options.filter(
-              (d: any) => d.value === v.value,
-            );
-            selectedData && getSelection(v.data);
-          } else {
-            handleSetSelectedValue("");
-          }
-        }}
-        getOptionSelected={(option, value) => option.code === value.code}
-        renderOption={(option) =>
-          `${option?.data?.sku || option.data.code} -- ${option.name}`
+    <Autocomplete
+      filterOptions={filterOptions}
+      id="asynchronous-demo"
+      style={{ width: 300 }}
+      open={open}
+      onOpen={() => {
+        setOpen(true);
+      }}
+      onClose={() => {
+        setOpen(false);
+      }}
+      onChange={(e, v) => {
+        if (v?.data?.mtrgroup === 11018) {
+          alert(v.data.name);
+          handleSetSelectedValue("");
+          return;
         }
-        options={options}
-        loading={loading}
-        value={search}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            onChange={handleChange}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </Fragment>
-              ),
-            }}
-          />
-        )}
-      />
-    </>
+        if (v) {
+          const selectedData = options.filter((d: any) => d.value === v.value);
+          selectedData && getSelection(v.data);
+        } else {
+          handleSetSelectedValue("");
+        }
+      }}
+      getOptionSelected={(option, value) => option.code === value.code}
+      renderOption={(option) =>
+        `${option?.data?.sku || option.data.code} -- ${option.name}`
+      }
+      options={options}
+      loading={loading}
+      value={search}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          onChange={handleChange}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <Fragment>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </Fragment>
+            ),
+          }}
+        />
+      )}
+    />
   );
 }
