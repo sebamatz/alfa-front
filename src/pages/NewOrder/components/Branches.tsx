@@ -3,10 +3,12 @@ import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { BranchesContext } from "../../../context/BranchesContext";
 import { IBranch } from "../../../api/types";
 
-export default function Branches(): ReactElement {
+interface Props {}
+
+export default function Branches({}: Props): ReactElement {
   const { customer, selectedBranch, setSelectedBranch } = 
     useContext(BranchesContext);
-    const [branches, setBranches] = useState("");
+    const [branches, setBranches] = useState([]);
 
   const handleSelectBranch = (e: any) => {
     let val = e.target.value;
@@ -17,7 +19,7 @@ export default function Branches(): ReactElement {
     if(customer?.branches.length > 0){
       setBranches(selectedBranch?.branchcode);
     }
-  }, [selectedBranch, customer?.branches.length]);
+  }, [selectedBranch]);
 
   return (
     <FormControl fullWidth>

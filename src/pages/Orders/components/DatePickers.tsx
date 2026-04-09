@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -83,7 +83,7 @@ const DatePickers = ({ getDateFrom, getDateTo, getSearchData }: Props) => {
     setSelectedDateTo(today);
     getDateFrom(today);
     getDateTo(today);
-  }, [getDateFrom, getDateTo]);
+  }, []);
 
   const handleDateChangeFrom = (date: Date | null) => {
     setSelectedDateFrom(date);

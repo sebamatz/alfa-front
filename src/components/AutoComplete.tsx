@@ -75,7 +75,7 @@ export default function Asynchronous() {
     return () => {
       active = false;
     };
-  }, [value, fincode, loading, orderColor]);
+  }, [value]);
 
   useEffect(() => {
     if (!open) {

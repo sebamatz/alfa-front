@@ -1,4 +1,5 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useEffect, useContext, useMemo } from "react";
+import { useHistory } from "react-router-dom";
 
 import { NewOrderContext } from "./NewOrderContext";
 
@@ -9,11 +10,12 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import OrderOptions from "./components/OrderOptions";
 import { Box, Button, TextField, Typography } from "@material-ui/core";
-import { postData, downloadPdf } from "../../api/fetch";
+import { postData, downloadPdf, searchBranches, getbranches } from "../../api/fetch";
 import { BranchesContext } from "../../context/BranchesContext";
 import Branches from "./components/Branches";
 import OrderDialog from "./Dialog";
 import { domain } from "../../config";
+import { IGetBranchesResponse } from "../../api/types";
 import { CustomerDrodown } from "../../components/CustomerDrodown";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +55,8 @@ const defaultValues: any = {
 };
 
 export const NewOrder = () => {
-  const { selectedBranch, customer, isEmployee } =
+  let history = useHistory();
+  const { selectedBranch, setCustomer, customer, isEmployee,branches,setBranches } =
     useContext(BranchesContext);
 
   const [rows, setRows] = useState([]);
@@ -250,6 +253,25 @@ export const NewOrder = () => {
     setSelectedTrdpgroup,
     colorCompany,
     setColorCompany,
+  };
+
+
+  const handleSelectBranch = async (event, value) => {
+    const selectedBranch: IGetBranchesResponse = branches.find((branch: IGetBranchesResponse) => branch?.afm === value?.afm);
+    console.log("event", event);
+    let data: IGetBranchesResponse[] = [];
+    try {
+      const data = await getbranches(selectedBranch?.afm);
+      setCustomer(data[0]);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  const handleGetBranches = async (event, value) => {
+    console.log("event", event);
+    const data: IGetBranchesResponse[] = await searchBranches(value);
+    setBranches(data);
   };
 
   console.log("stateData", stateData);
