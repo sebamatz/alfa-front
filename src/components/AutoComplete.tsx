@@ -57,7 +57,7 @@ export default function Asynchronous() {
 
         const response: any = await getData(
           `${domain}/erpapi/getitems/obj?pars=`,
-          data
+          data,
         );
         //await sleep(1e3); // For demo purposes.
 
@@ -75,6 +75,7 @@ export default function Asynchronous() {
     return () => {
       active = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {
@@ -106,14 +107,14 @@ export default function Asynchronous() {
           setOpen(false);
         }}
         onChange={(e, v) => {
-          if(v?.data?.mtrgroup===11018){
+          if (v?.data?.mtrgroup === 11018) {
             alert(v.data.name);
             handleSetSelectedValue("");
             return;
           }
           if (v) {
             const selectedData = options.filter(
-              (d: any) => d.value === v.value
+              (d: any) => d.value === v.value,
             );
             selectedData && getSelection(v.data);
           } else {

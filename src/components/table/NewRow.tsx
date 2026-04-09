@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useCallback, useContext } from "react";
 import {
   TableRow,
@@ -65,7 +66,7 @@ export const NewRow = ({ saveOrder }: Props) => {
     console.log("selectedInfo", selectedInfo.data);
     if (selectedInfo.data.qtY2 < 1) {
       return alert(
-        "Δεν έχει συμπληρωθεί το πεδίο – βέργες έλαχιστη ποσότητα 1"
+        "Δεν έχει συμπληρωθεί το πεδίο – βέργες έλαχιστη ποσότητα 1",
       );
     }
     saveOrder(selectedInfo.data);
@@ -87,7 +88,9 @@ export const NewRow = ({ saveOrder }: Props) => {
           {groups.length > 0 && (
             <Select onChange={handleSelectFincode} name="fincode" value={group}>
               {groups.map((v: any, i) => (
-                <MenuItem key={i} value={v.name}>{v.name}</MenuItem>
+                <MenuItem key={i} value={v.name}>
+                  {v.name}
+                </MenuItem>
               ))}
             </Select>
           )}
