@@ -1,4 +1,5 @@
-import React, { ReactNode, useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
     date: {
       textAlign: "left",
     },
-  })
+  }),
 );
 
 const DatePickers = ({ getDateFrom, getDateTo, getSearchData }: Props) => {
@@ -75,7 +76,7 @@ const DatePickers = ({ getDateFrom, getDateTo, getSearchData }: Props) => {
   // The first commit of Material-UI
   const [selectedDateFrom, setSelectedDateFrom] = useState<Date | null>(null);
   const [selectedDateTo, setSelectedDateTo] = useState<Date | null>(null);
-  
+
   // Set default dates to today when component mounts
   useEffect(() => {
     const today = new Date();

@@ -14,10 +14,8 @@ import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import EnhancedTableHead from "./Head";
 import { NewRow } from "./NewRow";
 
-import { HeadCell, Data } from "../../types";
-import { AnyTxtRecord } from "dns";
+import { Data } from "../../types";
 import { Button } from "@material-ui/core";
-import { SignalCellularConnectedNoInternet0BarTwoTone } from "@material-ui/icons";
 import { NewOrderContext } from "../../pages/NewOrder/NewOrderContext";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -105,7 +103,6 @@ export default function DataTable(props: TableProps) {
     headCells,
     name,
     clearCell = false,
-    maxCols = 100,
     add = false,
     orderCol = "",
     pagination = true,
@@ -181,9 +178,6 @@ export default function DataTable(props: TableProps) {
   useEffect(() => {
     !add && setRow(rows);
   }, [rows, add]);
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>

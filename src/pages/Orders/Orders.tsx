@@ -85,7 +85,7 @@ export const Orders = () => {
   };
 
   const getSearchData = (data) => {
-    const { text, from, to } = data;
+    const { text } = data;
     // post with data
     setQuery({ ...query, SearchValue: text, DFrom: dateFrom, DTo: dateto });
   };

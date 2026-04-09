@@ -1,17 +1,12 @@
 import React from "react";
-import {
-    createStyles,
-    makeStyles,
-    Theme,
-  } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import {HeadCell,Data} from '../../types'
+import { HeadCell } from "../../types";
 
 type Order = "asc" | "desc";
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,24 +31,20 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
-  })
+  }),
 );
-
 
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property
-  ) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
-  headCells: HeadCell[]
+  headCells: HeadCell[];
 }
 
-export default function EnhancedTableHead(props: EnhancedTableProps) {
-  const {headCells, classes, order, orderBy, onRequestSort } = props;
+export default function EnhancedTableHead(props: Readonly<EnhancedTableProps>) {
+  const { headCells, classes, order, orderBy, onRequestSort } = props;
   const createSortHandler =
     (property) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -85,4 +76,3 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
     </TableHead>
   );
 }
-
